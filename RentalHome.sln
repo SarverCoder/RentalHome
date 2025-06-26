@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3A60234A-05FA-4EBE-9978-3FC2D5415A28}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BEB2D77E-B395-43ED-ABDE-43C694EF9E3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalHome.API", "src\RentalHome.API\RentalHome.API.csproj", "{C019A639-97AC-4F3D-934B-95DFF9881DF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalHome.Application", "src\RentalHome.Application\RentalHome.Application.csproj", "{2BE9F00A-1506-4DA9-87ED-296531EAD97D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalHome.Core", "src\RentalHome.Core\RentalHome.Core.csproj", "{535F1168-14B2-4D0A-99D1-2846B2278CC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentalHome.DataAccess", "src\RentalHome.DataAccess\RentalHome.DataAccess.csproj", "{26752D64-A7B2-4B75-B468-3C2C4A8D9FE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C019A639-97AC-4F3D-934B-95DFF9881DF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C019A639-97AC-4F3D-934B-95DFF9881DF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C019A639-97AC-4F3D-934B-95DFF9881DF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C019A639-97AC-4F3D-934B-95DFF9881DF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BE9F00A-1506-4DA9-87ED-296531EAD97D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BE9F00A-1506-4DA9-87ED-296531EAD97D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BE9F00A-1506-4DA9-87ED-296531EAD97D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BE9F00A-1506-4DA9-87ED-296531EAD97D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{535F1168-14B2-4D0A-99D1-2846B2278CC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{535F1168-14B2-4D0A-99D1-2846B2278CC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{535F1168-14B2-4D0A-99D1-2846B2278CC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{535F1168-14B2-4D0A-99D1-2846B2278CC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26752D64-A7B2-4B75-B468-3C2C4A8D9FE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26752D64-A7B2-4B75-B468-3C2C4A8D9FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26752D64-A7B2-4B75-B468-3C2C4A8D9FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26752D64-A7B2-4B75-B468-3C2C4A8D9FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C019A639-97AC-4F3D-934B-95DFF9881DF5} = {3A60234A-05FA-4EBE-9978-3FC2D5415A28}
+		{2BE9F00A-1506-4DA9-87ED-296531EAD97D} = {3A60234A-05FA-4EBE-9978-3FC2D5415A28}
+		{535F1168-14B2-4D0A-99D1-2846B2278CC7} = {3A60234A-05FA-4EBE-9978-3FC2D5415A28}
+		{26752D64-A7B2-4B75-B468-3C2C4A8D9FE7} = {3A60234A-05FA-4EBE-9978-3FC2D5415A28}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {996B9A77-5425-42AB-AB9A-F927EDF0F9AD}
+	EndGlobalSection
+EndGlobal
