@@ -1,4 +1,4 @@
-using ProfChemistry.Application;
+using RentalHome.Application;
 using RentalHome.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
