@@ -6,4 +6,16 @@ public class User : BaseEntity
 {
     public string FirstName { get; set; } = null!;
     public string LastName { get; set; } = null!;
+    public string PhoneNumber { get; set; } = null!;
+    public string UserName { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
+    public string PasswordSalt { get; set; } = null!;
+    public string RefreshToken { get; set; } = null!;
+    public DateTime TokenExpiryTime { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
+    public bool IsActive { get; set; }
+
+
 }
