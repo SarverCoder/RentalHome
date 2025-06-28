@@ -14,4 +14,9 @@
     <ProjectReference Include="..\RentalHome.Application\RentalHome.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Attributes\" />
+    <Folder Include="Filters\" />
+  </ItemGroup>
+
 </Project>

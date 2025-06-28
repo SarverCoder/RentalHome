@@ -1,12 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using RentalHome.DataAccess.Persistence;
 
-namespace RentalHome.DataAccess
+namespace RentalHome.DataAccess;
+
+public static class DataAccessDependencyInjection
 {
-    internal class DataAccessDependencyInjection
+    public static IServiceCollection AddDataAccess(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
+        services.AddDatabase(configuration);
+
+        return services;
+    }
+
+    private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+        services.AddDbContext<DatabaseContext>(options =>
+            options.UseNpgsql(connectionString,
+                opt => opt.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName)));
     }
 }
