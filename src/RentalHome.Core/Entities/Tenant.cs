@@ -4,14 +4,17 @@ namespace RentalHome.Core.Entities;
 
 public class Tenant : BaseEntity
 {
-    public long UserId { get; set; }
+    public int UserId { get; set; }
 
     public decimal Latitude { get; set; }
 
     public decimal Longitude { get; set; }
 
-    public long PreferredPropertyType { get; set; }
+    public int PreferredPropertyTypeId { get; set; }
 
     public User User { get; set; }
+    public PropertyType PreferredPropertyType { get; set; }
+    public ICollection<Booking> Bookings { get; set; }
+    public ICollection<Review> PropertyReviews { get; set; }
 
 }

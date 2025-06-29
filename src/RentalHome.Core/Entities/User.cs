@@ -17,5 +17,8 @@ public class User : BaseEntity
     public DateTime UpdatedAt { get; set; }
     public bool IsActive { get; set; }
 
-
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+    public Tenant Tenant { get; set; }
+    public Landlord Landlord { get; set; }
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

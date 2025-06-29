@@ -1,17 +1,13 @@
 ﻿using RentalHome.Core.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace RentalHome.Core.Entities
+namespace RentalHome.Core.Entities;
+
+public  class Photo:BaseEntity
 {
-    public  class Photo:BaseEntity
-    {
-        public int PropertyId { get; set; }
-        public string Url { get; set; }
-        public bool IsMain { get; set; }
-        public int Order  { get; set; }
-    }
+    public int PropertyId { get; set; }
+    public string Url { get; set; }
+    public bool IsMain { get; set; }
+    public int Order  { get; set; }
+
+    public Property Property { get; set; }
 }

@@ -6,15 +6,15 @@ namespace RentalHome.Core.Entities;
 public class Property : BaseEntity
 {
 
-    public long LandlordId { get; set; }
+    public int LandlordId { get; set; }
 
-    public long PropertypeId { get; set; }
+    public int PropertyTypeId { get; set; }
 
-    public long DistrictId { get; set; }
+    public int DistrictId { get; set; }
 
     public District District { get; set; }
 
-    public long RegionId { get; set; }
+    public int RegionId { get; set; }
 
     public Region Region { get; set; }
 
@@ -38,10 +38,13 @@ public class Property : BaseEntity
 
     public bool IsFurnished { get; set; }
 
-    public long MinRentalPeriod { get; set; }
+    public int MinRentalPeriod { get; set; }
 
     public Landlord Landlord { get; set; }
-
-    public PropertyType PropertyType    { get; set; }
+    public PropertyType PropertyType { get; set; }
+    public ICollection<PropertyAmenity> PropertyAmenities { get; set; }
+    public ICollection<Photo> Photos { get; set; }
+    public ICollection<Booking> Bookings { get; set; }
+    public ICollection<Review> Reviews { get; set; }
 
 }

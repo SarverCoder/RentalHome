@@ -6,7 +6,7 @@ namespace RentalHome.Core.Entities;
 public class Notification : BaseEntity
 {
 
-    public long UserId { get; set; }
+    public int UserId { get; set; }
 
     public string Content { get; set; }
 
@@ -14,9 +14,9 @@ public class Notification : BaseEntity
 
     public bool IsRead { get; set; }
 
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public long RelatedEntityId { get; set; }
+    public int RelatedEntityId { get; set; }
 
     public User User { get; set; }
 }

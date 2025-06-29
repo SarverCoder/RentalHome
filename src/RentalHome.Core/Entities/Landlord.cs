@@ -4,7 +4,7 @@ namespace RentalHome.Core.Entities;
 
 public class Landlord : BaseEntity
 {
-    public long UserId { get; set; }
+    public int UserId { get; set; }
 
     public string CompanyName { get; set; }
 
@@ -13,6 +13,6 @@ public class Landlord : BaseEntity
     public bool IsVerified { get; set; }
 
     public User User { get; set; }
-
     public ICollection<Property> Properties { get; set; }
+    public ICollection<Review> Reviews { get; set; }
 }
