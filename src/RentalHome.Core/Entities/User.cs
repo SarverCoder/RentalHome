@@ -13,7 +13,7 @@ public class User : BaseEntity
     public string PasswordSalt { get; set; } = null!;
     public string RefreshToken { get; set; } = null!;
     public DateTime TokenExpiryTime { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
     public bool IsActive { get; set; }
 
