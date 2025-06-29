@@ -2,7 +2,7 @@
 using RentalHome.Application.Models;
 using RentalHome.Core.Entities;
 
-namespace ProfChemistry.Application.MappingProfiles;
+namespace RentalHome.Application.MappingProfiles;
 
 public class LandLordUserProfile : Profile
 {
