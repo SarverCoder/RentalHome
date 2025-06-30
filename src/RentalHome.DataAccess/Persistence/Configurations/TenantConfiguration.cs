@@ -20,8 +20,6 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
                .HasColumnType("decimal(9,6)")
                .IsRequired();
 
-        builder.Property(t => t.PreferredPropertyType)
-               .IsRequired(false);
 
         builder.HasOne(rp => rp.User)
                .WithOne(r => r.Tenant)
