@@ -20,31 +20,29 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
                .IsRequired(false);
 
         builder.Property(r => r.ReviewType)
-               .HasConversion<string>()
                .IsRequired();
 
         builder.Property(r => r.CreatedAt)
-               .HasColumnType("timestamp")
                .IsRequired();
 
-        builder.HasOne(r => r.Tenant)
-               .WithMany()
-               .HasForeignKey(r => r.TenantId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(r => r.Landlord)
-               .WithMany()
-               .HasForeignKey(r => r.LandlordId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(r => r.Booking)
+            .WithOne(b => b.Review)
+            .HasForeignKey<Review>(r => r.BookingId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(r => r.Property)
-               .WithMany()
-               .HasForeignKey(r => r.PropertyId)
-               .OnDelete(DeleteBehavior.Cascade);
+            .WithMany(p => p.Reviews)
+            .HasForeignKey(r => r.PropertyId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne(r => r.Booking)
-               .WithMany()
-               .HasForeignKey(r => r.BookingId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(r => r.Tenant)
+            .WithMany(tp => tp.PropertyReviews)
+            .HasForeignKey(r => r.TenantId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(r => r.Landlord)
+            .WithMany(lp => lp.Reviews)
+            .HasForeignKey(r => r.LandlordId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

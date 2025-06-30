@@ -8,7 +8,7 @@ public class LandlordConfiguration : IEntityTypeConfiguration<Landlord>
 {
     public void Configure(EntityTypeBuilder<Landlord> builder)
     {
-        builder.ToTable("Landlords");
+        
 
         builder.HasKey(l => l.Id);
 
@@ -21,11 +21,12 @@ public class LandlordConfiguration : IEntityTypeConfiguration<Landlord>
                .IsRequired(false);
 
         builder.Property(l => l.IsVerified)
-               .IsRequired();
+                .HasDefaultValue(false)
+                .IsRequired();
 
-        builder.HasOne<User>()
-               .WithMany()
-               .HasForeignKey(l => l.UserId)
+        builder.HasOne(rp => rp.User)
+               .WithOne(r => r.Landlord)
+               .HasForeignKey<Landlord>(l => l.UserId)
                .OnDelete(DeleteBehavior.Cascade);
     }
 }
