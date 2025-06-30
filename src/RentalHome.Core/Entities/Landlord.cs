@@ -15,4 +15,5 @@ public class Landlord : BaseEntity
     public User User { get; set; }
     public ICollection<Property> Properties { get; set; }
     public ICollection<Review> Reviews { get; set; }
+    public ICollection<Booking> Bookings { get; set; }
 }
