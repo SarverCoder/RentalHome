@@ -13,16 +13,19 @@ public class BookingConfiguration : IEntityTypeConfiguration<Booking>
         builder
             .HasOne(b =>b.Property)
             .WithMany(p => p.Bookings)
-            .HasForeignKey(b => b.PropertyId);
+            .HasForeignKey(b => b.PropertyId)
+            .IsRequired();
         
         builder
             .HasOne(b =>b.Tenant)
             .WithMany(t => t.Bookings)
-            .HasForeignKey(b => b.TenantId);
+            .HasForeignKey(b => b.TenantId)
+            .IsRequired();
         
         builder
             .HasOne(b => b.Landlord)
             .WithMany(l => l.Bookings)
-            .HasForeignKey(b => b.LandlordId);
+            .HasForeignKey(b => b.LandlordId)
+            .IsRequired();
     }
 }
