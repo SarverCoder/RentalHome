@@ -25,19 +25,22 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
         builder
             .HasOne(p => p.Landlord)
             .WithMany(l => l.Properties)
-            .HasForeignKey(p => p.LandlordId).IsRequired();
-        
+            .HasForeignKey(p => p.LandlordId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder
             .HasOne(p => p.PropertyType)
             .WithMany(p => p.Properties)
-            .HasForeignKey(p => p.PropertyTypeId);
-        
+            .HasForeignKey(p => p.PropertyTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder
             .HasOne(p =>p.District)
             .WithMany(d => d.Properties)
-            .HasForeignKey(p => p.DistrictId).IsRequired();
-        
-        
-        
+            .HasForeignKey(p => p.DistrictId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+
     }
 }
