@@ -19,10 +19,12 @@ public static class ApplicationDependencyInjection
     private static void AddServices(this IServiceCollection services, IWebHostEnvironment env)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IPhotoService, PhotoService>();
 
     }
     private static void RegisterAutoMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(IUserService));
+        services.AddAutoMapper(typeof(IPhotoService));
     }
 }
