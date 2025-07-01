@@ -10,6 +10,7 @@ public class DatabaseContext : DbContext
     { }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Amenity> Amenities { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
