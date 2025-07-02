@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using RentalHome.Application.Models.Tenant;
-using RentalHome.Application.Services.Intefaces;
 using RentalHome.Core.Entities;
 using RentalHome.DataAccess.Persistence;
 

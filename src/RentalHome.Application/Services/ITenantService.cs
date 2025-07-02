@@ -1,7 +1,7 @@
 ﻿using RentalHome.Application.Models.Tenant;
 using RentalHome.Core.Entities;
 
-namespace RentalHome.Application.Services.Intefaces;
+namespace RentalHome.Application.Services;
 
 public interface ITenantService
 {

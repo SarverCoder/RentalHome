@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalHome.Application.Models.PropertyModel;
-using RentalHome.Application.Services.Interfaces;
+using RentalHome.Application.Services;
 
 namespace RentalHome.API.Controllers;
 

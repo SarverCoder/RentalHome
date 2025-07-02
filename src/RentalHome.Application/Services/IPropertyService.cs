@@ -1,7 +1,7 @@
 ﻿using RentalHome.Application.Models.PropertyModel;
 using RentalHome.Core.Entities;
 
-namespace RentalHome.Application.Services.Interfaces;
+namespace RentalHome.Application.Services;
 
 public interface IPropertyService
 {
