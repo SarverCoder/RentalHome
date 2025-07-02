@@ -9,6 +9,7 @@ public class DatabaseContext : DbContext
     public DatabaseContext(DbContextOptions options) : base(options)
     { }
 
+    public DbSet<Property> Property { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Landlord> Landlords { get; set; }
