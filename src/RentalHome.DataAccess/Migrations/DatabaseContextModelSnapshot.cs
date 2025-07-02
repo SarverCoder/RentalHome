@@ -42,7 +42,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Amenity");
+                    b.ToTable("Amenities");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Booking", b =>
@@ -85,7 +85,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("Booking");
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.District", b =>
@@ -107,7 +107,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("District");
+                    b.ToTable("Districts");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Landlord", b =>
@@ -138,7 +138,7 @@ namespace RentalHome.DataAccess.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Landlord");
+                    b.ToTable("Landlords");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Notification", b =>
@@ -174,7 +174,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notification");
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Permission", b =>
@@ -196,7 +196,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Permission");
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Photo", b =>
@@ -227,7 +227,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("Photo");
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Property", b =>
@@ -301,7 +301,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("RegionId");
 
-                    b.ToTable("Property");
+                    b.ToTable("Properties");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.PropertyAmenity", b =>
@@ -321,7 +321,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("PropertyAmenity");
+                    b.ToTable("PropertyAmenities");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.PropertyType", b =>
@@ -349,7 +349,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PropertyType");
+                    b.ToTable("PropertyTypes");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Region", b =>
@@ -366,7 +366,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Region");
+                    b.ToTable("Regions");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Review", b =>
@@ -431,7 +431,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.RolePermission", b =>
@@ -449,7 +449,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermission");
+                    b.ToTable("RolePermissions");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Tenant", b =>
@@ -484,7 +484,7 @@ namespace RentalHome.DataAccess.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Tenant");
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.User", b =>
@@ -574,7 +574,7 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserRole");
+                    b.ToTable("UserRoles");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Booking", b =>

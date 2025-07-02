@@ -13,7 +13,7 @@ namespace RentalHome.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Amenity",
+                name: "Amenities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -23,11 +23,11 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Amenity", x => x.Id);
+                    table.PrimaryKey("PK_Amenities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Permission",
+                name: "Permissions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -37,11 +37,11 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Permission", x => x.Id);
+                    table.PrimaryKey("PK_Permissions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PropertyType",
+                name: "PropertyTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -52,11 +52,11 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PropertyType", x => x.Id);
+                    table.PrimaryKey("PK_PropertyTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Region",
+                name: "Regions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -65,11 +65,11 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Region", x => x.Id);
+                    table.PrimaryKey("PK_Regions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Role",
+                name: "Roles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -78,7 +78,7 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Role", x => x.Id);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,7 +106,7 @@ namespace RentalHome.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "District",
+                name: "Districts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -116,17 +116,17 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_District", x => x.Id);
+                    table.PrimaryKey("PK_Districts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_District_Region_RegionId",
+                        name: "FK_Districts_Regions_RegionId",
                         column: x => x.RegionId,
-                        principalTable: "Region",
+                        principalTable: "Regions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RolePermission",
+                name: "RolePermissions",
                 columns: table => new
                 {
                     RoleId = table.Column<int>(type: "integer", nullable: false),
@@ -135,23 +135,23 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RolePermission", x => new { x.RoleId, x.PermissionId });
+                    table.PrimaryKey("PK_RolePermissions", x => new { x.RoleId, x.PermissionId });
                     table.ForeignKey(
-                        name: "FK_RolePermission_Permission_PermissionId",
+                        name: "FK_RolePermissions_Permissions_PermissionId",
                         column: x => x.PermissionId,
-                        principalTable: "Permission",
+                        principalTable: "Permissions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RolePermission_Role_RoleId",
+                        name: "FK_RolePermissions_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Role",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Landlord",
+                name: "Landlords",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -163,9 +163,9 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Landlord", x => x.Id);
+                    table.PrimaryKey("PK_Landlords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Landlord_Users_UserId",
+                        name: "FK_Landlords_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -173,7 +173,7 @@ namespace RentalHome.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notification",
+                name: "Notifications",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -187,9 +187,9 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Notification", x => x.Id);
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notification_Users_UserId",
+                        name: "FK_Notifications_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -197,7 +197,7 @@ namespace RentalHome.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tenant",
+                name: "Tenants",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -210,20 +210,20 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tenant", x => x.Id);
+                    table.PrimaryKey("PK_Tenants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tenant_PropertyType_PreferredPropertyTypeId",
+                        name: "FK_Tenants_PropertyTypes_PreferredPropertyTypeId",
                         column: x => x.PreferredPropertyTypeId,
-                        principalTable: "PropertyType",
+                        principalTable: "PropertyTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Tenant_PropertyType_PropertyTypeId",
+                        name: "FK_Tenants_PropertyTypes_PropertyTypeId",
                         column: x => x.PropertyTypeId,
-                        principalTable: "PropertyType",
+                        principalTable: "PropertyTypes",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Tenant_Users_UserId",
+                        name: "FK_Tenants_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -231,7 +231,7 @@ namespace RentalHome.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserRole",
+                name: "UserRoles",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false),
@@ -240,15 +240,15 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserRole", x => new { x.Id, x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_UserRoles", x => new { x.Id, x.UserId, x.RoleId });
                     table.ForeignKey(
-                        name: "FK_UserRole_Role_RoleId",
+                        name: "FK_UserRoles_Roles_RoleId",
                         column: x => x.RoleId,
-                        principalTable: "Role",
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserRole_Users_UserId",
+                        name: "FK_UserRoles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -256,7 +256,7 @@ namespace RentalHome.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Property",
+                name: "Properties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -279,35 +279,35 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Property", x => x.Id);
+                    table.PrimaryKey("PK_Properties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Property_District_DistrictId",
+                        name: "FK_Properties_Districts_DistrictId",
                         column: x => x.DistrictId,
-                        principalTable: "District",
+                        principalTable: "Districts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Property_Landlord_LandlordId",
+                        name: "FK_Properties_Landlords_LandlordId",
                         column: x => x.LandlordId,
-                        principalTable: "Landlord",
+                        principalTable: "Landlords",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Property_PropertyType_PropertyTypeId",
+                        name: "FK_Properties_PropertyTypes_PropertyTypeId",
                         column: x => x.PropertyTypeId,
-                        principalTable: "PropertyType",
+                        principalTable: "PropertyTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Property_Region_RegionId",
+                        name: "FK_Properties_Regions_RegionId",
                         column: x => x.RegionId,
-                        principalTable: "Region",
+                        principalTable: "Regions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Booking",
+                name: "Bookings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -323,29 +323,29 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Booking", x => x.Id);
+                    table.PrimaryKey("PK_Bookings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Booking_Landlord_LandlordId",
+                        name: "FK_Bookings_Landlords_LandlordId",
                         column: x => x.LandlordId,
-                        principalTable: "Landlord",
+                        principalTable: "Landlords",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Booking_Property_PropertyId",
+                        name: "FK_Bookings_Properties_PropertyId",
                         column: x => x.PropertyId,
-                        principalTable: "Property",
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Booking_Tenant_TenantId",
+                        name: "FK_Bookings_Tenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenant",
+                        principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Photo",
+                name: "Photos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -357,17 +357,17 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Photo", x => x.Id);
+                    table.PrimaryKey("PK_Photos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Photo_Property_PropertyId",
+                        name: "FK_Photos_Properties_PropertyId",
                         column: x => x.PropertyId,
-                        principalTable: "Property",
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PropertyAmenity",
+                name: "PropertyAmenities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false),
@@ -376,17 +376,17 @@ namespace RentalHome.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PropertyAmenity", x => new { x.Id, x.PropertyId, x.AmenityId });
+                    table.PrimaryKey("PK_PropertyAmenities", x => new { x.Id, x.PropertyId, x.AmenityId });
                     table.ForeignKey(
-                        name: "FK_PropertyAmenity_Amenity_AmenityId",
+                        name: "FK_PropertyAmenities_Amenities_AmenityId",
                         column: x => x.AmenityId,
-                        principalTable: "Amenity",
+                        principalTable: "Amenities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PropertyAmenity_Property_PropertyId",
+                        name: "FK_PropertyAmenities_Properties_PropertyId",
                         column: x => x.PropertyId,
-                        principalTable: "Property",
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -410,95 +410,95 @@ namespace RentalHome.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Booking_BookingId",
+                        name: "FK_Reviews_Bookings_BookingId",
                         column: x => x.BookingId,
-                        principalTable: "Booking",
+                        principalTable: "Bookings",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reviews_Landlord_LandlordId",
+                        name: "FK_Reviews_Landlords_LandlordId",
                         column: x => x.LandlordId,
-                        principalTable: "Landlord",
+                        principalTable: "Landlords",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reviews_Property_PropertyId",
+                        name: "FK_Reviews_Properties_PropertyId",
                         column: x => x.PropertyId,
-                        principalTable: "Property",
+                        principalTable: "Properties",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reviews_Tenant_TenantId",
+                        name: "FK_Reviews_Tenants_TenantId",
                         column: x => x.TenantId,
-                        principalTable: "Tenant",
+                        principalTable: "Tenants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Booking_LandlordId",
-                table: "Booking",
+                name: "IX_Bookings_LandlordId",
+                table: "Bookings",
                 column: "LandlordId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Booking_PropertyId",
-                table: "Booking",
+                name: "IX_Bookings_PropertyId",
+                table: "Bookings",
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Booking_TenantId",
-                table: "Booking",
+                name: "IX_Bookings_TenantId",
+                table: "Bookings",
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_District_RegionId",
-                table: "District",
+                name: "IX_Districts_RegionId",
+                table: "Districts",
                 column: "RegionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Landlord_UserId",
-                table: "Landlord",
+                name: "IX_Landlords_UserId",
+                table: "Landlords",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notification_UserId",
-                table: "Notification",
+                name: "IX_Notifications_UserId",
+                table: "Notifications",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photo_PropertyId",
-                table: "Photo",
+                name: "IX_Photos_PropertyId",
+                table: "Photos",
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Property_DistrictId",
-                table: "Property",
+                name: "IX_Properties_DistrictId",
+                table: "Properties",
                 column: "DistrictId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Property_LandlordId",
-                table: "Property",
+                name: "IX_Properties_LandlordId",
+                table: "Properties",
                 column: "LandlordId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Property_PropertyTypeId",
-                table: "Property",
+                name: "IX_Properties_PropertyTypeId",
+                table: "Properties",
                 column: "PropertyTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Property_RegionId",
-                table: "Property",
+                name: "IX_Properties_RegionId",
+                table: "Properties",
                 column: "RegionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PropertyAmenity_AmenityId",
-                table: "PropertyAmenity",
+                name: "IX_PropertyAmenities_AmenityId",
+                table: "PropertyAmenities",
                 column: "AmenityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PropertyAmenity_PropertyId",
-                table: "PropertyAmenity",
+                name: "IX_PropertyAmenities_PropertyId",
+                table: "PropertyAmenities",
                 column: "PropertyId");
 
             migrationBuilder.CreateIndex(
@@ -523,34 +523,34 @@ namespace RentalHome.DataAccess.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RolePermission_PermissionId",
-                table: "RolePermission",
+                name: "IX_RolePermissions_PermissionId",
+                table: "RolePermissions",
                 column: "PermissionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tenant_PreferredPropertyTypeId",
-                table: "Tenant",
+                name: "IX_Tenants_PreferredPropertyTypeId",
+                table: "Tenants",
                 column: "PreferredPropertyTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tenant_PropertyTypeId",
-                table: "Tenant",
+                name: "IX_Tenants_PropertyTypeId",
+                table: "Tenants",
                 column: "PropertyTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tenant_UserId",
-                table: "Tenant",
+                name: "IX_Tenants_UserId",
+                table: "Tenants",
                 column: "UserId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_RoleId",
-                table: "UserRole",
+                name: "IX_UserRoles_RoleId",
+                table: "UserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRole_UserId",
-                table: "UserRole",
+                name: "IX_UserRoles_UserId",
+                table: "UserRoles",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -570,52 +570,52 @@ namespace RentalHome.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Notification");
+                name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Photo");
+                name: "Photos");
 
             migrationBuilder.DropTable(
-                name: "PropertyAmenity");
+                name: "PropertyAmenities");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "RolePermission");
+                name: "RolePermissions");
 
             migrationBuilder.DropTable(
-                name: "UserRole");
+                name: "UserRoles");
 
             migrationBuilder.DropTable(
-                name: "Amenity");
+                name: "Amenities");
 
             migrationBuilder.DropTable(
-                name: "Booking");
+                name: "Bookings");
 
             migrationBuilder.DropTable(
-                name: "Permission");
+                name: "Permissions");
 
             migrationBuilder.DropTable(
-                name: "Role");
+                name: "Roles");
 
             migrationBuilder.DropTable(
-                name: "Property");
+                name: "Properties");
 
             migrationBuilder.DropTable(
-                name: "Tenant");
+                name: "Tenants");
 
             migrationBuilder.DropTable(
-                name: "District");
+                name: "Districts");
 
             migrationBuilder.DropTable(
-                name: "Landlord");
+                name: "Landlords");
 
             migrationBuilder.DropTable(
-                name: "PropertyType");
+                name: "PropertyTypes");
 
             migrationBuilder.DropTable(
-                name: "Region");
+                name: "Regions");
 
             migrationBuilder.DropTable(
                 name: "Users");
