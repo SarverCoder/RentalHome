@@ -56,8 +56,9 @@ public class AmenityService (DatabaseContext context ,IMapper  mapper) : IAmenit
             return Task.FromResult(false);
         }
         amenity.Name = dto.Name;
-        amenity.IconClass = dto.Icon;
+        amenity.IconClass = dto.IconClass;
         context.Amenities.Update(amenity);
+        context.SaveChanges();
         return Task.FromResult(true);
     }
 }

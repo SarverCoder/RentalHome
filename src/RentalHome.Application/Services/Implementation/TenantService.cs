@@ -11,9 +11,10 @@ public class TenantService : ITenantService
     private readonly IMapper _mapper;
 
 
-    public TenantService(DatabaseContext context, IMapper    mapper)
+    public TenantService(DatabaseContext context, IMapper    mapper, DatabaseContext databaseContext)
     {
-        
+        _mapper = mapper;
+        _databaseContext = databaseContext;
     }
 
     public Task<Tenant> CreateAsync(CreateTenantModel createTenantModel)
