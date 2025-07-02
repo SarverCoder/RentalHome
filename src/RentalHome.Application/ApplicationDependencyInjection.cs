@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RentalHome.Application.MappingProfiles;
 using RentalHome.Application.Services;
+using RentalHome.Application.Services.Implementation;
+using RentalHome.Application.Services.Interfaces;
 
 namespace RentalHome.Application;
 
@@ -19,6 +22,7 @@ public static class ApplicationDependencyInjection
     private static void AddServices(this IServiceCollection services, IWebHostEnvironment env)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IPropertyService, PropertyService>();
         services.AddScoped<ILandlordService, LandlordService>();
         services.AddScoped<IBookingService, BookingService>();  
         
@@ -27,7 +31,5 @@ public static class ApplicationDependencyInjection
     private static void RegisterAutoMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(IUserService));
-        services.AddAutoMapper(typeof(ILandlordService));
-        services.AddAutoMapper(typeof(IBookingService));
     }
 }

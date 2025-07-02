@@ -10,8 +10,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+
+
 builder.Services.AddApplication(builder.Environment, builder.Configuration)
                 .AddDataAccess(builder.Configuration);
+
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
@@ -22,7 +27,10 @@ builder.Services.AddCors(options =>
     });
 });
 
+
+
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
