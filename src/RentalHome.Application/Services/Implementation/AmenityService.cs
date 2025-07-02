@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using RentalHome.Application.Models.Amenity;
 using RentalHome.Core.Entities;
 using RentalHome.DataAccess.Persistence;
@@ -10,20 +11,22 @@ public class AmenityService (DatabaseContext context ,IMapper  mapper) : IAmenit
   
     public async Task CreateAmenityAsync(CreateAmenityModel dto)
     {
-        var amanity = mapper.Map<Amenity>(dto);
-        await context.Amenities.AddAsync(amanity);
+        var amenity = mapper.Map<Amenity>(dto);
+        await context.Amenities.AddAsync(amenity);
+        await context.SaveChangesAsync();
 
     }
 
-    public Task<bool> DeleteAmenityAsync(int id)
+    public async Task<bool> DeleteAmenityAsync(int id)
     {
-        var amenity = context.Amenities.Find(id);
+        var amenity = await context.Amenities.FirstOrDefaultAsync(k => k.Id == id);
         if (amenity == null)
         {
-            return Task.FromResult(false);
+            return false;
         }
         context.Amenities.Remove(amenity);
-        return Task.FromResult(true);
+        await context.SaveChangesAsync();
+        return true;
     }
 
     public Task<List<AmenityModel>> GetAllAsync()
