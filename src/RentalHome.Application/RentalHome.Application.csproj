@@ -22,8 +22,6 @@
 	
   <ItemGroup>
     <Folder Include="Extensions\" />
-    <Folder Include="Helpers\GenerateJwt\" />
-    <Folder Include="Helpers\PasswordHashers\" />
     <Folder Include="Services\Security\AuthEnums\" />
   </ItemGroup>
 
