@@ -27,6 +27,9 @@ public static class ApplicationDependencyInjection
         services.AddScoped<ILandlordService, LandlordService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IAmenityService, AmenityService>();
+        services.AddScoped<IPropertyService, PropertyService>();
+        services.AddScoped<IRegionService, RegionService>();
+        services.AddScoped<IDistrictService, DistrictService>();
 
 
     }
@@ -39,7 +42,8 @@ public static class ApplicationDependencyInjection
         services.AddAutoMapper(typeof(ILandlordService));
         services.AddAutoMapper(typeof(IBookingService));
         services.AddAutoMapper(typeof(IAmenityService));
-
+        services.AddAutoMapper(typeof(IDistrictService));
+        services.AddAutoMapper(typeof(IRegionService));
 
 
     }
