@@ -10,10 +10,8 @@ public class Tenant : BaseEntity
 
     public decimal Longitude { get; set; }
 
-    public int PreferredPropertyTypeId { get; set; }
 
     public User User { get; set; }
-    public PropertyType PreferredPropertyType { get; set; }
     public ICollection<Booking> Bookings { get; set; }
     public ICollection<Review> PropertyReviews { get; set; }
 

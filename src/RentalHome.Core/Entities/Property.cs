@@ -8,8 +8,6 @@ public class Property : BaseEntity
 
     public int LandlordId { get; set; }
 
-    public int PropertyTypeId { get; set; }
-
     public int DistrictId { get; set; }
 
     public District District { get; set; }
@@ -30,18 +28,15 @@ public class Property : BaseEntity
 
     public PropertyStatus PropertyStatus { get; set; }
 
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    public DateTime UpdatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     public bool AllowsPets { get; set; }
 
     public bool IsFurnished { get; set; }
 
-    public int MinRentalPeriod { get; set; }
-
     public Landlord Landlord { get; set; }
-    public PropertyType PropertyType { get; set; }
     public ICollection<PropertyAmenity> PropertyAmenities { get; set; }
     public ICollection<Photo> Photos { get; set; }
     public ICollection<Booking> Bookings { get; set; }

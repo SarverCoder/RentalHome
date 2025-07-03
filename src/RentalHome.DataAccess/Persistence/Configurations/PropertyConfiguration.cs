@@ -28,11 +28,7 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
             .HasForeignKey(p => p.LandlordId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder
-            .HasOne(p => p.PropertyType)
-            .WithMany(p => p.Properties)
-            .HasForeignKey(p => p.PropertyTypeId)
-            .OnDelete(DeleteBehavior.Restrict);
+        
 
         builder
             .HasOne(p =>p.District)
