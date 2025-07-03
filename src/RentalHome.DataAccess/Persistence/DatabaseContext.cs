@@ -18,7 +18,6 @@ public class DatabaseContext : DbContext
     public DbSet<Photo> Photos { get; set; }
     public DbSet<Property> Properties { get; set; }
     public DbSet<PropertyAmenity> PropertyAmenities { get; set; }
-    public DbSet<PropertyType> PropertyTypes { get; set; }
     public DbSet<Region> Regions { get; set; }
     public DbSet<Review> Reviews { get; set; }
     public DbSet<Role> Roles { get; set; }

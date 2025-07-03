@@ -26,9 +26,6 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
                .HasForeignKey<Tenant>(t => t.UserId)
                .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne(tp => tp.PreferredPropertyType)
-            .WithMany()
-            .HasForeignKey(tp => tp.PreferredPropertyTypeId)
-            .OnDelete(DeleteBehavior.SetNull);
+       
     }
 }

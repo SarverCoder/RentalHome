@@ -8,7 +8,7 @@ namespace RentalHome.API.Controllers;
 public class LandlordController(ILandlordService service) : ControllerBase
 {
     [HttpGet("get/{id}")]
-    public async Task<IActionResult> GetById([FromBody] int id)
+    public async Task<IActionResult> GetById(int id)
     {
         var landlord = await service.GetByIdAsync(id);
         return Ok(landlord);
