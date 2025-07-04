@@ -16,7 +16,7 @@ public class UserService(
 
     
 
-    public async Task<ApiResult<string>> RegisterAsync(string firstName, string lastName, string email, string password, string phoneNumber)
+    public async Task<ApiResult<string>> RegisterAsync(string firstName, string lastName, string email, string password, string phoneNumber, string userName)
     {
         var existingUser = await context.Users.FirstOrDefaultAsync(e => e.Email == email);
         if (existingUser != null)
@@ -29,8 +29,10 @@ public class UserService(
         {
             FirstName = firstName,
             LastName = lastName,
+            UserName = userName,
             Email = email,
             PasswordHash = hash,
+            PasswordSalt = salt,
             PhoneNumber = phoneNumber,
             IsActive = true
             

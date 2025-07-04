@@ -17,6 +17,9 @@ public static class ApplicationDependencyInjection
 
         services.RegisterAutoMapper();
 
+        services.AddOptions<JwtOption>()
+            .BindConfiguration("JwtOption");
+
         return services;
     }
 

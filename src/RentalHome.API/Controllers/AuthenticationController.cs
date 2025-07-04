@@ -12,7 +12,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
     public async Task<IActionResult> RegisterUser(RegisterUserModel model)
     {
         var result = await userService.RegisterAsync(model.FirstName, model.LastName, model.Email, model.Password,
-            model.PhoneNumber);
+            model.PhoneNumber, model.UserName);
 
         if (!result.Succeeded)
             return BadRequest(result);

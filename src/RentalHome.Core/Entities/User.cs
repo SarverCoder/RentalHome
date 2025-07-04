@@ -11,7 +11,7 @@ public class User : BaseEntity
     public string Email { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
     public string PasswordSalt { get; set; } = null!;
-    public string RefreshToken { get; set; } = null!;
+    public string? RefreshToken { get; set; }
     public DateTime TokenExpiryTime { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
