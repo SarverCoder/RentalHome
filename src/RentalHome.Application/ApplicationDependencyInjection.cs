@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RentalHome.Application.Helpers.GenerateJwt;
+using RentalHome.Application.Helpers.PasswordHashers;
 using RentalHome.Application.MappingProfiles;
 using RentalHome.Application.Services;
 using RentalHome.Application.Services.Implementation;
@@ -15,11 +17,16 @@ public static class ApplicationDependencyInjection
 
         services.RegisterAutoMapper();
 
+        services.AddOptions<JwtOption>()
+            .BindConfiguration("JwtOption");
+
         return services;
     }
 
     private static void AddServices(this IServiceCollection services, IWebHostEnvironment env)
     {
+        services.AddScoped<IJwtTokenHandler, JwtTokenHandler>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITenantService, TenantService>();
         services.AddScoped<IPropertyService, PropertyService>();
