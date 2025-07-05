@@ -5,9 +5,9 @@ namespace RentalHome.Application.Services;
 
 public interface IPropertyService
 {
-    Task<List<Property>> GetAllAsync();
-    Task<Property?> GetByIdAsync(int id);
-    Task<Property> CreateAsync(CreatePropertyModel model);
-    Task<bool> UpdateAsync(int id, UpdatePropertyModel model);
-    Task<bool> DeleteAsync(int id);
+    Task<List<PropertyModel>> GetAllAsync();
+    Task<PropertyModel?> GetByIdAsync(int id);
+    Task<PropertyResponseModel> CreateAsync(CreatePropertyModel model);
+    Task<PropertyResponseModel> UpdateAsync( UpdatePropertyModel model,int id);
+    Task<PropertyResponseModel> DeleteAsync(int id);
 }
