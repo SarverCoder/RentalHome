@@ -3,7 +3,7 @@
 public class CreatePropertyModel
 {
     public int LandlordId { get; set; }
-    public int PropertyTypeId { get; set; }
+
     public int DistrictId { get; set; }
     public int RegionId { get; set; }
     public string Title { get; set; }
@@ -13,5 +13,4 @@ public class CreatePropertyModel
     public decimal Longitude { get; set; }
     public bool AllowsPets { get; set; }
     public bool IsFurnished { get; set; }
-    public int MinRentalPeriod { get; set; }
 }

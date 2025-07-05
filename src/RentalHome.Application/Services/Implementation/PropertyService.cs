@@ -17,41 +17,140 @@ public class PropertyService : IPropertyService
         _mapper = mapper;
     }
 
-    public async Task<Property> CreateAsync(CreatePropertyModel model)
+    public async Task<PropertyResponseModel> CreateAsync(CreatePropertyModel model)
     {
-        var property = _mapper.Map<Property>(model);
-        _context.Properties.Add(property);
-        await _context.SaveChangesAsync();
-        return property;
+        try
+        {
+            if (await _context.Properties.AnyAsync(p => p.Title == model.Title))
+            {
+                return new PropertyResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Property with this title already exists"
+                };
+            }
+
+            var property = _mapper.Map<Property>(model);
+            await _context.Properties.AddAsync(property);
+            await _context.SaveChangesAsync();
+
+            return new PropertyResponseModel
+            {
+                IsSuccess = true,
+                Message = "Property created successfully",
+                Id = property.Id
+            };
+        }
+        catch (Exception ex)
+        {
+            return new PropertyResponseModel
+            {
+                IsSuccess = false,
+                Message = $"Failed to create property: {ex.Message}"
+            };
+        }
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<PropertyResponseModel> UpdateAsync(UpdatePropertyModel model, int id)
     {
-        var property = await _context.Properties.FindAsync(id);
-        if (property is null) return false;
+        try
+        {
+            var property = await _context.Properties.FindAsync(id);
+            if (property == null)
+            {
+                return new PropertyResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Property not found"
+                };
+            }
 
-        _context.Properties.Remove(property);
-        await _context.SaveChangesAsync();
-        return true;
+            if (await _context.Properties.AnyAsync(p => p.Title == model.Title && p.Id != id))
+            {
+                return new PropertyResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Another property with this title already exists"
+                };
+            }
+
+            _mapper.Map(model, property);
+            _context.Properties.Update(property);
+            await _context.SaveChangesAsync();
+
+            return new PropertyResponseModel
+            {
+                IsSuccess = true,
+                Message = "Property updated successfully",
+                Id = property.Id
+            };
+        }
+        catch (Exception ex)
+        {
+            return new PropertyResponseModel
+            {
+                IsSuccess = false,
+                Message = $"Failed to update property: {ex.Message}"
+            };
+        }
     }
 
-    public async Task<List<Property>> GetAllAsync()
+    public async Task<PropertyResponseModel> DeleteAsync(int id)
     {
-        return await _context.Properties.ToListAsync();
+        try
+        {
+            var property = await _context.Properties.FindAsync(id);
+            if (property == null)
+            {
+                return new PropertyResponseModel
+                {
+                    IsSuccess = false,
+                    Message = "Property not found"
+                };
+            }
+
+            _context.Properties.Remove(property);
+            await _context.SaveChangesAsync();
+
+            return new PropertyResponseModel
+            {
+                IsSuccess = true,
+                Message = "Property deleted successfully"
+            };
+        }
+        catch (Exception ex)
+        {
+            return new PropertyResponseModel
+            {
+                IsSuccess = false,
+                Message = $"Failed to delete property: {ex.Message}"
+            };
+        }
     }
 
-    public async Task<Property?> GetByIdAsync(int id)
+    public async Task<PropertyModel?> GetByIdAsync(int id)
     {
-        return await _context.Properties.FindAsync(id);
+        var property = await _context.Properties
+            .Include(p => p.Region)
+            .Include(p => p.District)
+            .Include(p => p.Landlord)
+            .Include(p => p.Photos)
+            .Include(p => p.PropertyAmenities).ThenInclude(pa => pa.Amenity)
+            .Include(p => p.Reviews)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        return _mapper.Map<PropertyModel>(property);
     }
 
-    public async Task<bool> UpdateAsync(int id, UpdatePropertyModel model)
+    public async Task<List<PropertyModel>> GetAllAsync()
     {
-        var property = await _context.Properties.FindAsync(id);
-        if (property == null) return false;
+        var properties = await _context.Properties
+            .Include(p => p.Region)
+            .Include(p => p.District)
+            .Include(p => p.Photos)
+            .ToListAsync();
 
-        _mapper.Map(model, property);
-        await _context.SaveChangesAsync();
-        return true;
+        return _mapper.Map<List<PropertyModel>>(properties);
     }
+
 }

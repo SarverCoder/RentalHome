@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -20,11 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RentalHome.Application\RentalHome.Application.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Attributes\" />
-    <Folder Include="Filters\" />
   </ItemGroup>
 
 </Project>
