@@ -15,39 +15,41 @@ public class PropertyController : ControllerBase
         _propertyService = propertyService;
     }
 
-    [HttpGet]
+    [HttpGet("get-all")]
     public async Task<IActionResult> GetAll()
     {
         var properties = await _propertyService.GetAllAsync();
         return Ok(properties);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    [HttpGet("get-by/{id}")]
+    public async Task<IActionResult> Get(int id)
     {
-        var properties = await _propertyService.GetByIdAsync(id);
-        if(properties == null) return NotFound();
-        return Ok(properties);
+        var property = await _propertyService.GetByIdAsync(id);
+        if (property == null)
+            return NotFound(new { Message = "Property not found" });
+
+        return Ok(property);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody]  CreatePropertyModel model)
+    [HttpPost("create")]
+    public async Task<IActionResult> Create([FromBody] CreatePropertyModel model)
     {
-        var created = await _propertyService.CreateAsync(model);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        var result = await _propertyService.CreateAsync(model);
+        return Ok(result);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdatePropertyModel model)
+    [HttpPut("update/{id}")]
+    public async Task<IActionResult> Update([FromBody] UpdatePropertyModel model, [FromRoute] int id)
     {
-        var result = await _propertyService.UpdateAsync(id, model);
-        return result ? NoContent() : NotFound();
+        var result = await _propertyService.UpdateAsync(model, id);
+        return Ok(result);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _propertyService.DeleteAsync(id);
-        return result ? NoContent(): NotFound();
+        return Ok(result);
     }
 }
