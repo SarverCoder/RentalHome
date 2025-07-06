@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RentalHome.API.Attributes;
 using RentalHome.Application.Models;
 using RentalHome.Application.Services;
 
@@ -11,8 +12,8 @@ public class AuthenticationController(IUserService userService) : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> RegisterUser(RegisterUserModel model)
     {
-        var result = await userService.RegisterAsync(model.FirstName, model.LastName, model.Email, model.Password,
-            model.PhoneNumber, model.UserName);
+        var result = await userService.RegisterAsync( model.Email, model.Password,
+            model.PhoneNumber, model.UserName, model.isAdminSite);
 
         if (!result.Succeeded)
             return BadRequest(result);
@@ -33,5 +34,16 @@ public class AuthenticationController(IUserService userService) : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
+    [HttpGet("Get-User-Auth")]
+    public async Task<IActionResult> GetUserAuth()
+    {
+        var result = await userService.GetUserAuth();
+        if (result.Succeeded)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
+    }
 
 }

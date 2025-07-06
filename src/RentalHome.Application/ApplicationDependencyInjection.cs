@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Helpers.PasswordHashers;
 using RentalHome.Application.MappingProfiles;
@@ -14,6 +17,7 @@ public static class ApplicationDependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services, IWebHostEnvironment env, IConfiguration configuration)
     {
         services.AddServices(env);
+        
 
         services.RegisterAutoMapper();
 
@@ -37,6 +41,8 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IPropertyService, PropertyService>();
         services.AddScoped<IRegionService, RegionService>();
         services.AddScoped<IDistrictService, DistrictService>();
+        services.AddScoped<IPermissionService, PermissionService>();
+        services.AddScoped<IAuthService, AuthService>();
 
 
     }
@@ -53,5 +59,38 @@ public static class ApplicationDependencyInjection
         services.AddAutoMapper(typeof(IRegionService));
 
 
+    }
+
+    public static IServiceCollection AddAuth(this IServiceCollection serviceCollection, IConfiguration configuration)
+    {
+        var jwtOptions = configuration.GetSection("JwtOption").Get<JwtOption>();
+
+        if (jwtOptions == null)
+        {
+            throw new InvalidOperationException("JWT sozlamalari topilmadi. appsettings.json faylida 'JwtOption' bo'limini tekshiring.");
+        }
+
+        serviceCollection.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ClockSkew = TimeSpan.Zero,
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidAudience = jwtOptions.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+                };
+            });
+
+        return serviceCollection;
     }
 }

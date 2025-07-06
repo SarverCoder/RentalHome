@@ -1,3 +1,4 @@
+using RentalHome.API.Extensions;
 using RentalHome.Application;
 using RentalHome.DataAccess;
 
@@ -11,11 +12,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
+builder.Services.AddSwagger();  
+
 
 builder.Services.AddApplication(builder.Environment, builder.Configuration)
                 .AddDataAccess(builder.Configuration);
 
 
+builder.Services.AddAuth(builder.Configuration);
 
 builder.Services.AddCors(options =>
 {

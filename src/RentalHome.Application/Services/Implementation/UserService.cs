@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Helpers.PasswordHashers;
 using RentalHome.Application.Models;
+using RentalHome.Application.Services.Implementation;
 using RentalHome.Core.Entities;
 using RentalHome.DataAccess.Persistence;
 
@@ -10,13 +11,14 @@ namespace RentalHome.Application.Services;
 public class UserService(
     DatabaseContext context, 
     IPasswordHasher passwordHasher, 
-    IJwtTokenHandler jwtTokenHandler
+    IJwtTokenHandler jwtTokenHandler,
+    IAuthService authService
     ) : IUserService
 {
 
     
 
-    public async Task<ApiResult<string>> RegisterAsync(string firstName, string lastName, string email, string password, string phoneNumber, string userName)
+    public async Task<ApiResult<string>> RegisterAsync( string email, string password, string phoneNumber, string userName,bool isAdminSite)
     {
         var existingUser = await context.Users.FirstOrDefaultAsync(e => e.Email == email);
         if (existingUser != null)
@@ -27,8 +29,7 @@ public class UserService(
 
         var user = new User()
         {
-            FirstName = firstName,
-            LastName = lastName,
+            
             UserName = userName,
             Email = email,
             PasswordHash = hash,
@@ -43,6 +44,29 @@ public class UserService(
         await context.SaveChangesAsync();
 
         return ApiResult<string>.Success("Ro'yxatdan o'tdingiz. Email orqali tasdiqlang.");
+
+        // --- Rolni isAdminSite ga qarab belgilash ---
+        string roleName = isAdminSite ? "Admin" : "User";
+        var defaultRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
+
+        if (defaultRole == null)
+        {
+            // Agar kerakli rol topilmasa, xato qaytaramiz
+            return ApiResult<string>.Failure(new[] { $"Tizimda '{roleName}' roli topilmadi. Admin bilan bog'laning." });
+        }
+
+        context.UserRoles.Add(new UserRole
+        {
+            UserId = user.Id,
+            RoleId = defaultRole.Id
+        });
+        await context.SaveChangesAsync();
+        // --- Rolni belgilash qismi tugadi ---
+
+       /* var otp = await _otpService.GenerateAndSaveOtpAsync(user.Id);
+        await _emailService.SendOtpAsync(email, otp);
+
+        return ApiResult<string>.Success("Ro'yxatdan o'tdingiz. Email orqali tasdiqlang.");*/
 
 
     }
@@ -67,13 +91,34 @@ public class UserService(
         return ApiResult<LoginResponseModel>.Success(new LoginResponseModel
         {
             Email = user.Email,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
             AccessToken = accessToken,
             RefreshToken = refreshToken,
-            
+            Roles = user.UserRoles.Select(ur => ur.Role.Name).ToList(),
+            Permissions = user.UserRoles
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .Select(p => p.Permission.ShortName)
+                .Distinct()
+                .ToList()
+
         });
 
+    }
+
+    public async Task<ApiResult<UserAuthResponseModel>> GetUserAuth()
+    {
+        if (authService.User == null)
+        {
+            return ApiResult<UserAuthResponseModel>.Failure(new List<string> { "User not found" });
+        }
+
+        UserAuthResponseModel userPermissions = new UserAuthResponseModel
+        {
+            Id = authService.User.Id,
+            FullName = authService.User.FullName,
+            Permissions = authService.User.Permissions
+        };
+
+        return ApiResult<UserAuthResponseModel>.Success(userPermissions);
     }
 }
 
