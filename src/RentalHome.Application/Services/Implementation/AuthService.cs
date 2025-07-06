@@ -80,7 +80,7 @@ public class AuthService : IAuthService
                         // Foydalanuvchining rollari orqali ularga berilgan barcha ruxsatlarni olamiz
                         Permissions = a.UserRoles
                                          .SelectMany(ur => ur.Role.RolePermissions) // UserRole -> Role -> RolePermission
-                                         .Select(rp => rp.Permission.Name)     // RolePermission -> Permission -> ShortName
+                                         .Select(rp => rp.Permission.ShortName)     // RolePermission -> Permission -> ShortName
                                          .Distinct() // Takrorlanuvchi ruxsat nomlarini olib tashlaymiz
                                          .ToHashSet(),
                     }).FirstOrDefault(a => a.Id == userId);

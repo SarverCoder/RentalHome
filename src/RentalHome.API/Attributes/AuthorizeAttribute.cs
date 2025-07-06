@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using RentalHome.API.Filters;
 using RentalHome.Application.Security.AuthEnums;
 
 namespace RentalHome.API.Attributes;

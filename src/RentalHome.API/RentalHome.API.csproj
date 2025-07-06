@@ -22,4 +22,8 @@
     <ProjectReference Include="..\RentalHome.Application\RentalHome.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>
