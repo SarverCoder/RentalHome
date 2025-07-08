@@ -43,6 +43,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IDistrictService, DistrictService>();
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IFileStorageService, MinioFileStorageService>();
 
 
     }

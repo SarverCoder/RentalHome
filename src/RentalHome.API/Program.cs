@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSwagger();  
+builder.Services.AddMinIo(builder.Configuration);
 
 
 builder.Services.AddApplication(builder.Environment, builder.Configuration)

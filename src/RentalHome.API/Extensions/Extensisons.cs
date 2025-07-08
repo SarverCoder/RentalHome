@@ -1,4 +1,8 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Minio;
+using RentalHome.Application.Common;
 
 namespace RentalHome.API.Extensions;
 
@@ -60,5 +64,31 @@ public static class Extensions
             // var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             // c.IncludeXmlComments(xmlPath);
         });
+
+        
+    }
+
+    public static void AddMinIo(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MinioSettings>(configuration.GetSection("MinioSettings"));
+        
+        services.AddSingleton<IMinioClient>(sp =>
+        {
+            var minioSettings = sp.GetRequiredService<IOptions<MinioSettings>>().Value;
+
+            // MinioClient obyektini yaratish
+            var client = new MinioClient()
+                .WithEndpoint(minioSettings.Endpoint)
+                .WithCredentials(minioSettings.AccessKey, minioSettings.SecretKey);
+
+            // Agar SSL yoqilgan bo'lsa
+            if (minioSettings.UseSsl)
+            {
+                client = client.WithSSL();
+            }
+
+            return client.Build(); // MinioClient ni qurish
+        });
+
     }
 }
