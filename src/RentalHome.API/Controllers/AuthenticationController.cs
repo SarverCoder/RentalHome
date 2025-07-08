@@ -34,6 +34,13 @@ public class AuthenticationController(IUserService userService) : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("verify-otp")]
+    public async Task<ApiResult<string>> VerifyOtpAsync([FromBody] OtpVerificationModel model)
+    {
+        var result = await userService.VerifyOtpAsync(model);
+        return result;
+    }
+
     [Authorize]
     [HttpGet("Get-User-Auth")]
     public async Task<IActionResult> GetUserAuth()
