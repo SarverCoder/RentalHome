@@ -9,6 +9,7 @@ public class DatabaseContext : DbContext
     public DatabaseContext(DbContextOptions options) : base(options)
     { }
 
+    public DbSet<UserOTPs> UserOTPs { get; set; }
     public DbSet<Amenity> Amenities { get; set; }
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<District> Districts { get; set; }

@@ -1,14 +1,14 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using RentalHome.Application.Common;
 using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Helpers.PasswordHashers;
-using RentalHome.Application.MappingProfiles;
 using RentalHome.Application.Services;
 using RentalHome.Application.Services.Implementation;
+using System.Text;
 
 namespace RentalHome.Application;
 
@@ -18,8 +18,9 @@ public static class ApplicationDependencyInjection
     {
         services.AddServices(env);
         
-
         services.RegisterAutoMapper();
+
+        services.AddEmailConfiguration(configuration);
 
         services.AddOptions<JwtOption>()
             .BindConfiguration("JwtOption");
@@ -43,6 +44,9 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IDistrictService, DistrictService>();
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IFileStorageService, MinioFileStorageService>();
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IOtpService, OtpService>();
 
 
     }
@@ -92,5 +96,11 @@ public static class ApplicationDependencyInjection
             });
 
         return serviceCollection;
+    }
+
+
+    public static void AddEmailConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<EmailConfiguration>(configuration.GetSection("EmailConfiguration"));
     }
 }

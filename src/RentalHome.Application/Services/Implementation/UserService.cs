@@ -12,17 +12,34 @@ public class UserService(
     DatabaseContext context, 
     IPasswordHasher passwordHasher, 
     IJwtTokenHandler jwtTokenHandler,
-    IAuthService authService
+    IAuthService authService,
+    IOtpService otpService,
+    IEmailService emailService
     ) : IUserService
 {
 
-    
+    public async Task<ApiResult<string>> VerifyOtpAsync(OtpVerificationModel model)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+        if (user is null)
+            return ApiResult<string>.Failure(new[] { "Foydalanuvchi topilmadi." });
+
+        var otp = await otpService.GetLatestOtpAsync(user.Id, model.Code);
+        if (otp is null || otp.ExpiredAt < DateTime.Now)
+            return ApiResult<string>.Failure(new[] { "Kod noto‘g‘ri yoki muddati tugagan." });
+
+        user.IsVerified = true;
+        await context.SaveChangesAsync();
+
+        return ApiResult<string>.Success("OTP muvaffaqiyatli tasdiqlandi.");
+    }
 
     public async Task<ApiResult<string>> RegisterAsync( string email, string password, string phoneNumber, string userName,bool isAdminSite)
     {
         var existingUser = await context.Users.FirstOrDefaultAsync(e => e.Email == email);
         if (existingUser != null)
             return ApiResult<string>.Failure(new[] { "Email allaqachon mavjud" });
+       
 
         var salt = Guid.NewGuid().ToString();
         var hash = passwordHasher.Encrypt(password, salt);
@@ -43,7 +60,7 @@ public class UserService(
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
 
-        return ApiResult<string>.Success("Ro'yxatdan o'tdingiz. Email orqali tasdiqlang.");
+       
 
         // --- Rolni isAdminSite ga qarab belgilash ---
         string roleName = isAdminSite ? "Admin" : "User";
@@ -63,10 +80,10 @@ public class UserService(
         await context.SaveChangesAsync();
         // --- Rolni belgilash qismi tugadi ---
 
-       /* var otp = await _otpService.GenerateAndSaveOtpAsync(user.Id);
-        await _emailService.SendOtpAsync(email, otp);
+        var otp = await otpService.GenerateAndSaveOtpAsync(user.Id);
+        await emailService.SendOtpAsync(email, otp);
 
-        return ApiResult<string>.Success("Ro'yxatdan o'tdingiz. Email orqali tasdiqlang.");*/
+        return ApiResult<string>.Success("Ro'yxatdan o'tdingiz. Email orqali tasdiqlang.");
 
 
     }
