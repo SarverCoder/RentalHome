@@ -15,11 +15,7 @@ public class PropertyConfiguration : IEntityTypeConfiguration<Property>
         builder.Property(p => p.Description)
             .HasMaxLength(2000);
         
-        builder.Property(p => p.AllowsPets)
-            .HasDefaultValue(false);
-
-        builder.Property(p => p.IsFurnished)
-            .HasDefaultValue(false);
+       
         
         
         builder

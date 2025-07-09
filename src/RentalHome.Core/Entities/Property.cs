@@ -32,10 +32,6 @@ public class Property : BaseEntity
 
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public bool AllowsPets { get; set; }
-
-    public bool IsFurnished { get; set; }
-
     public Landlord Landlord { get; set; }
     public ICollection<PropertyAmenity> PropertyAmenities { get; set; }
     public ICollection<Photo> Photos { get; set; }
