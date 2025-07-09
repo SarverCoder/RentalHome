@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RentalHome.Application.Models;
 
 namespace RentalHome.Application.Services
 {
@@ -11,8 +12,8 @@ namespace RentalHome.Application.Services
     {
         Task<List<AmenityModel>> GetAllAsync();
         Task<AmenityModel> GetByIdAsync(int id);
-        Task CreateAmenityAsync(CreateAmenityModel dto);
-        Task<bool> UpdateeAmenityAsync(UpdateAmenityModel dto);
+        Task<ApiResult<string>> CreateAmenityAsync(CreateAmenityModel dto);
+        Task<bool> UpdateAmenityAsync(UpdateAmenityModel dto, int id);
         Task<bool> DeleteAmenityAsync(int id);
     }
 

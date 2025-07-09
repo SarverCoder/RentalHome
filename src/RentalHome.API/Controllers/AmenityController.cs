@@ -35,17 +35,17 @@ public class AmenityController : Controller
         {
             return BadRequest("Amenity data is required.");
         }
-        await _amenityService.CreateAmenityAsync(dto);
-        return Ok ();
+       
+        return Ok(await _amenityService.CreateAmenityAsync(dto));
     }
-    [HttpPut("Update")]
-    public async Task<IActionResult> Update([FromBody] UpdateAmenityModel dto)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update([FromBody] UpdateAmenityModel dto, int id)
     {
-        if (dto == null || dto.Id <= 0)
+        if (dto == null || id <= 0)
         {
             return BadRequest("Valid amenity data is required.");
         }
-        var result = await _amenityService.UpdateeAmenityAsync(dto);
+        var result = await _amenityService.UpdateAmenityAsync(dto, id);
         if (!result)
         {
             return NotFound("Amenity not found.");

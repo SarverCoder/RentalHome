@@ -1,4 +1,5 @@
 using RentalHome.API.Extensions;
+using RentalHome.API.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using RentalHome.Application;
 using RentalHome.DataAccess;
@@ -16,6 +17,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSwagger();  
 builder.Services.AddMinIo(builder.Configuration);
+builder.Services.AddSerilogMonitoring(builder.Configuration);
 
 
 builder.Services.AddApplication(builder.Environment, builder.Configuration)
@@ -54,6 +56,8 @@ await context.Database.MigrateAsync();
 app.UseSwagger();
 app.UseSwaggerUI();
 //}
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
