@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Minio;
 using RentalHome.Application.Common;
+using Serilog;
 
 namespace RentalHome.API.Extensions;
 
@@ -90,5 +90,19 @@ public static class Extensions
             return client.Build(); // MinioClient ni qurish
         });
 
+    }
+
+    public static void AddSerilogMonitoring(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSerilog((serviceProvider, loggerConfiguration) =>
+        {
+            loggerConfiguration
+                .ReadFrom
+                .Configuration(configuration);
+        });
+
+        
+
+        
     }
 }

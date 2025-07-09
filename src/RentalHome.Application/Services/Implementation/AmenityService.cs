@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using RentalHome.Application.Models;
 using RentalHome.Application.Models.Amenity;
 using RentalHome.Core.Entities;
+using RentalHome.Core.Exceptions;
 using RentalHome.DataAccess.Persistence;
 
 namespace RentalHome.Application.Services.Implementation;
@@ -9,56 +11,58 @@ namespace RentalHome.Application.Services.Implementation;
 public class AmenityService (DatabaseContext context ,IMapper  mapper) : IAmenityService
 {
   
-    public async Task CreateAmenityAsync(CreateAmenityModel dto)
+    public async Task<ApiResult<string>> CreateAmenityAsync(CreateAmenityModel dto)
     {
         var amenity = mapper.Map<Amenity>(dto);
         await context.Amenities.AddAsync(amenity);
         await context.SaveChangesAsync();
-
+        return ApiResult<string>.Success("Amenity successfully created");
     }
 
     public async Task<bool> DeleteAmenityAsync(int id)
     {
         var amenity = await context.Amenities.FirstOrDefaultAsync(k => k.Id == id);
-        if (amenity == null)
+        if (amenity is null)
         {
-            return false;
+            throw new NotFoundException("Id not found");
         }
         context.Amenities.Remove(amenity);
         await context.SaveChangesAsync();
         return true;
     }
 
-    public Task<List<AmenityModel>> GetAllAsync()
+    public async Task<List<AmenityModel>> GetAllAsync()
     {
-        var amenities = context.Amenities.ToList();
+        var amenities = await context.Amenities.ToListAsync();
         var amenityModels = mapper.Map<List<AmenityModel>>(amenities);
-        return Task.FromResult(amenityModels);
+        return amenityModels;
     }
 
-    public Task<AmenityModel> GetByIdAsync(int id)
+    public async Task<AmenityModel> GetByIdAsync(int id)
     {
-        var amenity = context.Amenities.Find(id);
-        if (amenity == null)
+        var amenity = await context.Amenities.FirstOrDefaultAsync(x => x.Id == id);
+        if (amenity is null)
         {
-            return Task.FromResult<AmenityModel>(null);
+            throw new NotFoundException("Amenity not found");
         }
-        var amenityModel = mapper.Map<AmenityModel>(amenity);
-        return Task.FromResult(amenityModel);                                       
+
+        return mapper.Map<AmenityModel>(amenity);
     }
 
 
-    public Task<bool> UpdateeAmenityAsync(UpdateAmenityModel dto)
+    public async Task<bool> UpdateAmenityAsync(UpdateAmenityModel dto, int id)
     {
-        var amenity = context.Amenities.Find(dto.Id);
-        if (amenity == null)
+        var amenity = await context.Amenities.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (amenity is null)
         {
-            return Task.FromResult(false);
+            throw new NotFoundException("Amenity not found");
+            return false;
         }
-        amenity.Name = dto.Name;
-        amenity.IconClass = dto.IconClass;
-        context.Amenities.Update(amenity);
-        context.SaveChanges();
-        return Task.FromResult(true);
+
+        context.Amenities.Update(mapper.Map<Amenity>(dto));
+        await context.SaveChangesAsync();
+        return true;
+
     }
 }
