@@ -134,6 +134,7 @@ public class PropertyService : IPropertyService
             .Include(p => p.Region)
             .Include(p => p.District)
             .Include(p => p.Landlord)
+                .ThenInclude(l=>l.User)
             .Include(p => p.Photos)
             .Include(p => p.PropertyAmenities).ThenInclude(pa => pa.Amenity)
             .Include(p => p.Reviews)

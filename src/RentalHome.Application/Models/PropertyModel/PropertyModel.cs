@@ -18,9 +18,6 @@ public class PropertyModel
 
     public PropertyStatus PropertyStatus { get; set; }
 
-    public bool AllowsPets { get; set; }
-
-    public bool IsFurnished { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
