@@ -27,6 +27,7 @@ public class DatabaseContext : DbContext
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<UserRole> UserRoles { get; set; }
+    
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
