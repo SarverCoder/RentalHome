@@ -1,4 +1,5 @@
-﻿using RentalHome.Core.Enums;
+﻿using RentalHome.Application.Models.Amenity;
+using RentalHome.Core.Enums;
 
 namespace RentalHome.Application.Models.PropertyModel;
 
@@ -34,7 +35,7 @@ public class PropertyModel
     public List<string> PhotoUrls { get; set; } = new();
 
     // Amenities (e.g. "WiFi", "AC")
-    public List<string> Amenities { get; set; } = new();
+    public List<AmenityModel> Amenities { get; set; } = new();
 
     // Average Rating (optional)
     public double? AverageRating { get; set; }
