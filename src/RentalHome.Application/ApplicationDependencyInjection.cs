@@ -47,6 +47,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IFileStorageService, MinioFileStorageService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IOtpService, OtpService>();
+        services.AddScoped<IDataSeedService, DataSeedService>();
 
 
     }

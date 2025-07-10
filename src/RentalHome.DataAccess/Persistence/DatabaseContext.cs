@@ -16,6 +16,7 @@ public class DatabaseContext : DbContext
     public DbSet<Landlord> Landlords { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Permission> Permissions { get; set; }
+    public DbSet<PermissionGroup> PermissionGroups { get; set; }
     public DbSet<Photo> Photos { get; set; }
     public DbSet<Property> Properties { get; set; }
     public DbSet<PropertyAmenity> PropertyAmenities { get; set; }

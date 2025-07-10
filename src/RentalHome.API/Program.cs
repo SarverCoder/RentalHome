@@ -1,6 +1,7 @@
 using RentalHome.API.Extensions;
 using RentalHome.API.Middlewares;
 using RentalHome.Application;
+using RentalHome.Application.Services;
 using RentalHome.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,16 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+// Seed roles and permissions on application startup
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var dataSeedService = serviceProvider.GetService(typeof(RentalHome.Application.Services.IDataSeedService)) as RentalHome.Application.Services.IDataSeedService;
+    if (dataSeedService != null)
+    {
+        await dataSeedService.SeedRolesAndPermissionsAsync();
+    }
+}
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
