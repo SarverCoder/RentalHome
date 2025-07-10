@@ -316,19 +316,22 @@ namespace RentalHome.DataAccess.Migrations
             modelBuilder.Entity("RentalHome.Core.Entities.PropertyAmenity", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AmenityId")
                         .HasColumnType("integer");
 
                     b.Property<int>("PropertyId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("AmenityId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id", "PropertyId", "AmenityId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AmenityId");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex("PropertyId", "AmenityId");
 
                     b.ToTable("PropertyAmenities");
                 });

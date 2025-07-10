@@ -8,7 +8,9 @@ public class PropertyAmenityConfiguration : IEntityTypeConfiguration<PropertyAme
 {
     public void Configure(EntityTypeBuilder<PropertyAmenity> builder)
     {
-        builder.HasKey(pa => new {pa.Id, pa.PropertyId, pa.AmenityId });
+        builder.HasKey(pa => pa.Id); // faqat Id
+
+        builder.HasIndex(pa => new { pa.PropertyId, pa.AmenityId }); // optional: duplicate qo‘ymaslik uchun
 
         builder.HasOne(pa => pa.Property)
             .WithMany(p => p.PropertyAmenities)
@@ -19,5 +21,6 @@ public class PropertyAmenityConfiguration : IEntityTypeConfiguration<PropertyAme
             .WithMany(a => a.PropertyAmenities)
             .HasForeignKey(pa => pa.AmenityId)
             .OnDelete(DeleteBehavior.Cascade);
+
     }
 }

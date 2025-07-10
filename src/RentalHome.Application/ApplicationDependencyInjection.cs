@@ -47,6 +47,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IFileStorageService, MinioFileStorageService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IOtpService, OtpService>();
+        services.AddScoped<IPropertyAmenityService,PropertyAmenityService>();
 
 
     }
@@ -55,6 +56,7 @@ public static class ApplicationDependencyInjection
         services.AddAutoMapper(typeof(IUserService));
         services.AddAutoMapper(typeof(ITenantService));
         services.AddAutoMapper(typeof(IPropertyService));
+        services.AddAutoMapper(typeof(IPropertyAmenityService));
         services.AddAutoMapper(typeof(IPhotoService));
         services.AddAutoMapper(typeof(ILandlordService));
         services.AddAutoMapper(typeof(IBookingService));
