@@ -11,4 +11,5 @@ public class CreatePropertyModel
     public decimal Price { get; set; }
     public decimal Latitude { get; set; }
     public decimal Longitude { get; set; }
+    public List<int> PropertyAmenityIds { get; set; } = new();
 }

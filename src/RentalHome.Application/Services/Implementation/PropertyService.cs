@@ -21,18 +21,29 @@ public class PropertyService : IPropertyService
     {
         try
         {
-            if (await _context.Properties.AnyAsync(p => p.Title == model.Title))
-            {
-                return new PropertyResponseModel
-                {
-                    IsSuccess = false,
-                    Message = "Property with this title already exists"
-                };
-            }
-
             var property = _mapper.Map<Property>(model);
+
+            // Property ni avval saqlab, Id olish kerak
             await _context.Properties.AddAsync(property);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // bu yerda property.Id hosil bo'ladi
+
+            // Amenity IDlar asosida PropertyAmenity yozuvlarini yaratish
+            if (model.PropertyAmenityIds != null && model.PropertyAmenityIds.Any())
+            {
+                var existingAmenityIds = await _context.Amenities
+                    .Where(a => model.PropertyAmenityIds.Contains(a.Id))
+                    .Select(a => a.Id)
+                    .ToListAsync();
+
+                var propertyAmenities = existingAmenityIds.Select(amenityId => new PropertyAmenity
+                {
+                    PropertyId = property.Id,
+                    AmenityId = amenityId
+                }).ToList();
+
+                await _context.PropertyAmenities.AddRangeAsync(propertyAmenities);
+                await _context.SaveChangesAsync();
+            }
 
             return new PropertyResponseModel
             {
@@ -51,11 +62,15 @@ public class PropertyService : IPropertyService
         }
     }
 
+
     public async Task<PropertyResponseModel> UpdateAsync(UpdatePropertyModel model, int id)
     {
         try
         {
-            var property = await _context.Properties.FindAsync(id);
+            var property = await _context.Properties
+                .Include(p => p.PropertyAmenities)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (property == null)
             {
                 return new PropertyResponseModel
@@ -65,17 +80,32 @@ public class PropertyService : IPropertyService
                 };
             }
 
-            if (await _context.Properties.AnyAsync(p => p.Title == model.Title && p.Id != id))
-            {
-                return new PropertyResponseModel
-                {
-                    IsSuccess = false,
-                    Message = "Another property with this title already exists"
-                };
-            }
-
+            // Update asosiy Property qiymatlari
             _mapper.Map(model, property);
             _context.Properties.Update(property);
+
+            // Amenity ID larni yangilash
+            if (model.PropertyAmenityIds != null)
+            {
+                // Eski yozuvlarni o'chiramiz
+                _context.PropertyAmenities.RemoveRange(property.PropertyAmenities);
+
+                // Faqat mavjud amenity id larni olish
+                var validAmenityIds = await _context.Amenities
+                    .Where(a => model.PropertyAmenityIds.Contains(a.Id))
+                    .Select(a => a.Id)
+                    .ToListAsync();
+
+                // Yangilarini qo‘shamiz
+                var newAmenities = validAmenityIds.Select(amenityId => new PropertyAmenity
+                {
+                    PropertyId = property.Id,
+                    AmenityId = amenityId
+                }).ToList();
+
+                await _context.PropertyAmenities.AddRangeAsync(newAmenities);
+            }
+
             await _context.SaveChangesAsync();
 
             return new PropertyResponseModel
@@ -99,7 +129,10 @@ public class PropertyService : IPropertyService
     {
         try
         {
-            var property = await _context.Properties.FindAsync(id);
+            var property = await _context.Properties
+                .Include(p => p.PropertyAmenities)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (property == null)
             {
                 return new PropertyResponseModel
@@ -109,6 +142,13 @@ public class PropertyService : IPropertyService
                 };
             }
 
+            // Bog‘langan PropertyAmenity yozuvlarini o‘chirish
+            if (property.PropertyAmenities.Any())
+            {
+                _context.PropertyAmenities.RemoveRange(property.PropertyAmenities);
+            }
+
+            // Asosiy Propertyni o‘chirish
             _context.Properties.Remove(property);
             await _context.SaveChangesAsync();
 
