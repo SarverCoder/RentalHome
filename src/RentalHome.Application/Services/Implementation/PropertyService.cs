@@ -21,29 +21,12 @@ public class PropertyService : IPropertyService
     {
         try
         {
+            #region
             var property = _mapper.Map<Property>(model);
-
-            // Property ni avval saqlab, Id olish kerak
+            List<PropertyAmenity> results = model.PropertyAmenityIds.Select(a => new PropertyAmenity { AmenityId = a }).ToList();
+            property.PropertyAmenities = results;
             await _context.Properties.AddAsync(property);
-            await _context.SaveChangesAsync(); // bu yerda property.Id hosil bo'ladi
-
-            // Amenity IDlar asosida PropertyAmenity yozuvlarini yaratish
-            if (model.PropertyAmenityIds != null && model.PropertyAmenityIds.Any())
-            {
-                var existingAmenityIds = await _context.Amenities
-                    .Where(a => model.PropertyAmenityIds.Contains(a.Id))
-                    .Select(a => a.Id)
-                    .ToListAsync();
-
-                var propertyAmenities = existingAmenityIds.Select(amenityId => new PropertyAmenity
-                {
-                    PropertyId = property.Id,
-                    AmenityId = amenityId
-                }).ToList();
-
-                await _context.PropertyAmenities.AddRangeAsync(propertyAmenities);
-                await _context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
 
             return new PropertyResponseModel
             {
@@ -51,6 +34,37 @@ public class PropertyService : IPropertyService
                 Message = "Property created successfully",
                 Id = property.Id
             };
+            #endregion
+            //var property = _mapper.Map<Property>(model);
+
+            //// Property ni avval saqlab, Id olish kerak
+            //await _context.Properties.AddAsync(property);
+            //await _context.SaveChangesAsync(); // bu yerda property.Id hosil bo'ladi
+
+            //// Amenity IDlar asosida PropertyAmenity yozuvlarini yaratish
+            //if (model.PropertyAmenityIds != null && model.PropertyAmenityIds.Any())
+            //{
+            //    var existingAmenityIds = await _context.Amenities
+            //        .Where(a => model.PropertyAmenityIds.Contains(a.Id))
+            //        .Select(a => a.Id)
+            //        .ToListAsync();
+
+            //    var propertyAmenities = existingAmenityIds.Select(amenityId => new PropertyAmenity
+            //    {
+            //        PropertyId = property.Id,
+            //        AmenityId = amenityId
+            //    }).ToList();
+
+            //    await _context.PropertyAmenities.AddRangeAsync(propertyAmenities);
+            //    await _context.SaveChangesAsync();
+            //}
+
+            //return new PropertyResponseModel
+            //{
+            //    IsSuccess = true,
+            //    Message = "Property created successfully",
+            //    Id = property.Id
+            //};
         }
         catch (Exception ex)
         {
