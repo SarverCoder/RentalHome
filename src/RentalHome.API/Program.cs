@@ -1,6 +1,8 @@
 using RentalHome.API.Extensions;
 using RentalHome.API.Middlewares;
 using RentalHome.Application;
+using RentalHome.Application.Services.Implementation;
+using RentalHome.Application.Services;
 using RentalHome.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +49,7 @@ app.UseSwaggerUI();
 //}
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<LoggingMiddleware>();
 
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();

@@ -48,6 +48,9 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IOtpService, OtpService>();
 
+        services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
+
+
 
     }
     private static void RegisterAutoMapper(this IServiceCollection services)
