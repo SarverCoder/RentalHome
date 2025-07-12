@@ -13,6 +13,9 @@ public enum ApplicationPermissionCode
     [ApplicationPermissionDescription(ApplicationPermissionGroupCode.User, "User Read")]
     UserRead,
 
+    [ApplicationPermissionDescription(ApplicationPermissionGroupCode.User, "User Update")]
+    UserUpdate,
+
     #endregion
 
     #region Permission
@@ -21,6 +24,8 @@ public enum ApplicationPermissionCode
     GetPermissions,
 
     #endregion
+
+
 
 
     #endregion

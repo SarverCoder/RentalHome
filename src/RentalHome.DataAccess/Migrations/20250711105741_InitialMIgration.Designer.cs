@@ -12,8 +12,8 @@ using RentalHome.DataAccess.Persistence;
 namespace RentalHome.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250706065228_initialMIgration")]
-    partial class initialMIgration
+    [Migration("20250711105741_InitialMIgration")]
+    partial class InitialMIgration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,13 +220,19 @@ namespace RentalHome.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
-                    b.ToTable("PermissionGroup");
+                    b.ToTable("PermissionGroups");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Photo", b =>
@@ -268,11 +274,6 @@ namespace RentalHome.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AllowsPets")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -283,11 +284,6 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.Property<int>("DistrictId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsFurnished")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
 
                     b.Property<int>("LandlordId")
                         .HasColumnType("integer");
@@ -440,20 +436,26 @@ namespace RentalHome.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Admin"
+                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(812),
+                            Name = "SuperAdmin"
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "Seller"
+                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(814),
+                            Name = "Admin"
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Name = "User"
+                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(816),
+                            Name = "Landlord"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(818),
+                            Name = "Tenant"
                         });
                 });
 
@@ -571,7 +573,7 @@ namespace RentalHome.DataAccess.Migrations
                             CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "superadmin@example.com",
                             Fullname = "Adminjon",
-                            IsActive = false,
+                            IsActive = true,
                             IsVerified = true,
                             PasswordHash = "D42P7vktaO2foK9yXdm141IJE8Z8z3auswXfDhyzKCM=",
                             PasswordSalt = "9f7d6dc5-34b4-4b66-a65e-0dc2fc17c0db",
@@ -580,6 +582,39 @@ namespace RentalHome.DataAccess.Migrations
                             UpdatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserName = "LixavCoder"
                         });
+                });
+
+            modelBuilder.Entity("RentalHome.Core.Entities.UserOTPs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpiredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserOTPsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserOTPsId");
+
+                    b.ToTable("UserOTPs");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.UserRole", b =>
@@ -803,6 +838,21 @@ namespace RentalHome.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("RentalHome.Core.Entities.UserOTPs", b =>
+                {
+                    b.HasOne("RentalHome.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RentalHome.Core.Entities.UserOTPs", null)
+                        .WithMany("OtpCodes")
+                        .HasForeignKey("UserOTPsId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("RentalHome.Core.Entities.UserRole", b =>
                 {
                     b.HasOne("RentalHome.Core.Entities.Role", "Role")
@@ -898,6 +948,11 @@ namespace RentalHome.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("RentalHome.Core.Entities.UserOTPs", b =>
+                {
+                    b.Navigation("OtpCodes");
                 });
 #pragma warning restore 612, 618
         }

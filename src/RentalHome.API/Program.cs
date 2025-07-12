@@ -39,7 +39,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Seed roles and permissions on application startup
+//Seed roles and permissions on application startup
 using (var scope = app.Services.CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
