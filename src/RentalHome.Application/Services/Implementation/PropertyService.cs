@@ -10,11 +10,13 @@ public class PropertyService : IPropertyService
 {
     private readonly DatabaseContext _context;
     private readonly IMapper _mapper;
+    private readonly IPhotoService _photoService;
 
-    public PropertyService(DatabaseContext context, IMapper mapper)
+    public PropertyService(DatabaseContext context, IMapper mapper, IPhotoService photoService)
     {
         _context = context;
         _mapper = mapper;
+        _photoService = photoService;
     }
 
     public async Task<PropertyResponseModel> CreateAsync(CreatePropertyModel model)
@@ -33,6 +35,8 @@ public class PropertyService : IPropertyService
             var property = _mapper.Map<Property>(model);
             await _context.Properties.AddAsync(property);
             await _context.SaveChangesAsync();
+
+            await _photoService.TransferTempImagesToMinio(property.Id);
 
             return new PropertyResponseModel
             {
