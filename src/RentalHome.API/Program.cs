@@ -40,7 +40,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 //Seed roles and permissions on application startup
-using (var scope = app.Services.CreateScope())
+/*using (var scope = app.Services.CreateScope())
 {
     var serviceProvider = scope.ServiceProvider;
     var dataSeedService = serviceProvider.GetService(typeof(RentalHome.Application.Services.IDataSeedService)) as RentalHome.Application.Services.IDataSeedService;
@@ -48,7 +48,7 @@ using (var scope = app.Services.CreateScope())
     {
         await dataSeedService.SeedRolesAndPermissionsAsync();
     }
-}
+}*/
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

@@ -31,7 +31,7 @@ public class UserService(
 
         var otp = await otpService.GetLatestOtpAsync(user.Id, model.Code);
         if (otp is null || otp.ExpiredAt < DateTime.Now)
-            return ApiResult<string>.Failure(new[] { "Kod noto�g�ri yoki muddati tugagan." });
+            return ApiResult<string>.Failure(new[] { "Kod notogri yoki muddati tugagan." });
 
         user.IsVerified = true;
         await context.SaveChangesAsync();
@@ -157,7 +157,7 @@ public class UserService(
             return ApiResult<LoginResponseModel>.Failure(new[] { "Foydalanuvchi topilmadi" });
 
         if (!passwordHasher.Verify(user.PasswordHash, model.Password, user.PasswordSalt))
-            return ApiResult<LoginResponseModel>.Failure(new[] { "Parol noto�g�ri" });
+            return ApiResult<LoginResponseModel>.Failure(new[] { "Parol notogri" });
 
         if (!user.IsActive)
             return ApiResult<LoginResponseModel>.Failure(new[] { "Email tasdiqlanmagan" });
