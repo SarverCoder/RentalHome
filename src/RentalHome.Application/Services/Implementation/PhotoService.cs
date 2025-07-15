@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel;
 using RentalHome.Application.Common;
@@ -17,13 +18,13 @@ public class PhotoService : IPhotoService
     private readonly IMapper _mapper;
     private readonly IFileStorageService _fileStorageService;
     private readonly MinioSettings _minioSettings;
-
-    public PhotoService(DatabaseContext context, IMapper mapper, IFileStorageService fileStorageService, MinioSettings minioSettings)
+    
+    public PhotoService(DatabaseContext context, IMapper mapper, IFileStorageService fileStorageService, IOptions<MinioSettings> minioSettings)
     {
         _context = context;
         _mapper = mapper;
         _fileStorageService = fileStorageService;
-        _minioSettings = minioSettings;
+        _minioSettings = minioSettings.Value;
     }
     public Task<IQueryable<PhotoModel>> GetPhotosAsync()
     {
@@ -57,55 +58,72 @@ public class PhotoService : IPhotoService
         };
     }
 
-    public async Task UploadToFileStorageAsync(IFormFile file)
+    public async Task<string> UploadToFileStorageAsync(IFormFile file)
     {
         var fileExtension = Path.GetExtension(file.FileName);
         var objectName = $"{Guid.NewGuid()}{fileExtension}"; // Minio'da saqlanadigan fayl nomi
 
-        var pa = "C:\\Users\\User\\temp-upload";
-        Directory.CreateDirectory(pa);
+        var path = "wwwroot/temp-upload";
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
 
-        var tempPath = Path.Combine(pa, objectName);
+        var tempPath = Path.Combine(path, objectName);
 
 
         using (var stream = new FileStream(tempPath, FileMode.Create))
         {
             file.CopyTo(stream);
         }
+        return objectName;
     }
 
-    public async Task TransferTempImagesToMinio(int propertyId)
+    public async Task TransferTempImagesToMinio(int propertyId, IList<string> fileNames)
     {
         var bucket = _minioSettings.BucketName;
 
-       
-        foreach (var tempImageName in Directory.GetFiles("C:\\Users\\User\\temp-upload"))
+        var files = Directory.GetFiles("wwwroot/temp-upload");
+        for (int i = 0; i< files.Length; i++)
         {
-            var fileName = Path.GetFileName(tempImageName);
-            var objectKey = $"property/{propertyId}/{fileName}";
+            var fileName = Path.GetFileName(files[i]);
+
 
             var contentType = GetMimeType(fileName);
 
-            using (var fileStream = File.OpenRead(tempImageName))
-            using (var memoryStream = new MemoryStream())
-            {
-                await fileStream.CopyToAsync(memoryStream);
-                memoryStream.Position = 0; // Reset position after copying
-                await _fileStorageService.UploadFileAsync(bucket, objectKey, memoryStream, contentType);
+            for (int j = 0; j < fileNames.Count; j++) {
+                if (fileName == fileNames[j])
+                {
 
+                    var objectKey = $"property/{propertyId}/{fileName}";
+                    using (var fileStream = File.OpenRead(files[i]))
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await fileStream.CopyToAsync(memoryStream);
+                        memoryStream.Position = 0; // Reset position after copying
+                        await _fileStorageService.UploadFileAsync(bucket, objectKey, memoryStream, contentType);
+
+                    }
+
+                    await _context.Photos.AddAsync(new Photo()
+                    {
+
+                        PropertyId = propertyId,
+                        Url = objectKey
+                    });
+
+
+                    // Delete temp file
+                    File.Delete(files[i]);
+
+                    continue;
+                }
             }
+            
 
-            await _context.Photos.AddAsync(new Photo()
-            {
-                
-                PropertyId = propertyId,
-                Url = objectKey
-            });
-            await _context.SaveChangesAsync();
-
-            // Delete temp file
-            File.Delete(tempImageName);
         }
+        
+            await _context.SaveChangesAsync();
     }
     private string GetMimeType(string fileName)
     {

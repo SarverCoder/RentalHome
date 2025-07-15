@@ -8,7 +8,7 @@ public interface IPhotoService
     Task<IQueryable<PhotoModel>> GetPhotosAsync();
     Task<PhotoModel> GetPhotoAsync(int id);
     Task<ResponsePhotoModel> CreatePhotoAsync(CreatePhotoModel  model);
-    Task UploadToFileStorageAsync(IFormFile file);
-    Task TransferTempImagesToMinio(int propertyId);
+    Task<string> UploadToFileStorageAsync(IFormFile file);
+    Task TransferTempImagesToMinio(int propertyId, IList<string> fileNames);
     Task<ResponsePhotoModel> DeletePhotoAsync(int id);
 }

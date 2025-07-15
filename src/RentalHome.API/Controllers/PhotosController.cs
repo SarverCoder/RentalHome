@@ -31,9 +31,9 @@ public class PhotosController(IPhotoService service,
 
         // Fayl nomini noyob qilish uchun Guid va original kengaytmadan foydalanamiz
         
-        await service.UploadToFileStorageAsync(file);
+        var result = await service.UploadToFileStorageAsync(file);
 
-        return Ok();
+        return Ok(result);
     
     }
 

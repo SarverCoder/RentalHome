@@ -13,4 +13,5 @@ public class CreatePropertyModel
     public decimal Longitude { get; set; }
     public bool AllowsPets { get; set; }
     public bool IsFurnished { get; set; }
+    public IList<string> FileNames { get; set; }
 }
