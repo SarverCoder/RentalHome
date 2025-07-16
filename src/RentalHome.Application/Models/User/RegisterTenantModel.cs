@@ -21,5 +21,4 @@ public class RegisterTenantModel
 
     public decimal Longitude { get; set; } = 0;
 
-    public bool isAdminSite { get; set; } = false;
 }

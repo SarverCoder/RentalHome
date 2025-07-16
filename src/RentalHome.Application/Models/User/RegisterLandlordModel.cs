@@ -22,5 +22,4 @@ public class RegisterLandlordModel
 
     public string Bio { get; set; } = "";
 
-    public bool isAdminSite { get; set; } = false;
 }
