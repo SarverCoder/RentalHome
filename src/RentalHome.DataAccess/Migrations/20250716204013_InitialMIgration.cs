@@ -4,8 +4,6 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace RentalHome.DataAccess.Migrations
 {
     /// <inheritdoc />
@@ -32,8 +30,7 @@ namespace RentalHome.DataAccess.Migrations
                 name: "PermissionGroups",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
@@ -60,8 +57,7 @@ namespace RentalHome.DataAccess.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
@@ -86,7 +82,7 @@ namespace RentalHome.DataAccess.Migrations
                     RefreshToken = table.Column<string>(type: "text", nullable: true),
                     TokenExpiryTime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
                     IsVerified = table.Column<bool>(type: "boolean", nullable: false)
                 },
@@ -99,8 +95,7 @@ namespace RentalHome.DataAccess.Migrations
                 name: "Permissions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<int>(type: "integer", nullable: false),
                     ShortName = table.Column<string>(type: "text", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
                     PermissionGroupId = table.Column<int>(type: "integer", nullable: false),
@@ -454,25 +449,9 @@ namespace RentalHome.DataAccess.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Roles",
-                columns: new[] { "Id", "CreatedAt", "Name", "UpdatedAt" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(812), "SuperAdmin", null },
-                    { 2, new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(814), "Admin", null },
-                    { 3, new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(816), "Landlord", null },
-                    { 4, new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(818), "Tenant", null }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "Email", "Fullname", "IsActive", "IsVerified", "PasswordHash", "PasswordSalt", "PhoneNumber", "RefreshToken", "TokenExpiryTime", "UpdatedAt", "UserName" },
-                values: new object[] { 1, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "superadmin@example.com", "Adminjon", true, true, "D42P7vktaO2foK9yXdm141IJE8Z8z3auswXfDhyzKCM=", "9f7d6dc5-34b4-4b66-a65e-0dc2fc17c0db", "+998934548544", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LixavCoder" });
-
-            migrationBuilder.InsertData(
-                table: "UserRoles",
-                columns: new[] { "Id", "RoleId", "UserId" },
-                values: new object[] { 1, 1, 1 });
+                values: new object[] { 1, new DateTime(2025, 7, 16, 20, 40, 12, 922, DateTimeKind.Utc).AddTicks(5142), "superadmin@example.com", "Adminjon", true, true, "D42P7vktaO2foK9yXdm141IJE8Z8z3auswXfDhyzKCM=", "9f7d6dc5-34b4-4b66-a65e-0dc2fc17c0db", "+998934548544", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LixavCoder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_LandlordId",

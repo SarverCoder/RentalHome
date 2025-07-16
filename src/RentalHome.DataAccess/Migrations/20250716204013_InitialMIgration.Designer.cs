@@ -12,7 +12,7 @@ using RentalHome.DataAccess.Persistence;
 namespace RentalHome.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250711105741_InitialMIgration")]
+    [Migration("20250716204013_InitialMIgration")]
     partial class InitialMIgration
     {
         /// <inheritdoc />
@@ -183,10 +183,7 @@ namespace RentalHome.DataAccess.Migrations
             modelBuilder.Entity("RentalHome.Core.Entities.Permission", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -215,10 +212,7 @@ namespace RentalHome.DataAccess.Migrations
             modelBuilder.Entity("RentalHome.Core.Entities.PermissionGroup", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -409,10 +403,7 @@ namespace RentalHome.DataAccess.Migrations
             modelBuilder.Entity("RentalHome.Core.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -431,32 +422,6 @@ namespace RentalHome.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(812),
-                            Name = "SuperAdmin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(814),
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(816),
-                            Name = "Landlord"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            CreatedAt = new DateTime(2025, 7, 11, 10, 57, 40, 603, DateTimeKind.Utc).AddTicks(818),
-                            Name = "Tenant"
-                        });
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.RolePermission", b =>
@@ -548,7 +513,7 @@ namespace RentalHome.DataAccess.Migrations
                     b.Property<DateTime>("TokenExpiryTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserName")
@@ -570,7 +535,7 @@ namespace RentalHome.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            CreatedAt = new DateTime(2025, 7, 16, 20, 40, 12, 922, DateTimeKind.Utc).AddTicks(5142),
                             Email = "superadmin@example.com",
                             Fullname = "Adminjon",
                             IsActive = true,
@@ -635,14 +600,6 @@ namespace RentalHome.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            UserId = 1,
-                            RoleId = 1
-                        });
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Booking", b =>

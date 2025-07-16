@@ -26,6 +26,7 @@ public class DataSeedService : IDataSeedService
         await SeedPermissionGroupsAsync();
         await SeedPermissionsAsync();
         await SeedRolePermissionsAsync();
+        await AssignAdminRoleToUserAsync("+998934548544");
     }
 
     private async Task SeedRolesAsync()
@@ -230,5 +231,47 @@ public class DataSeedService : IDataSeedService
 
         await _context.SaveChangesAsync();
         _logger.LogInformation("Role-permission assignments completed.");
+    }
+
+    public async Task AssignAdminRoleToUserAsync(string adminPhoneNumber)
+    {
+        var adminUser = await _context.Users
+            .FirstOrDefaultAsync(u => u.PhoneNumber == adminPhoneNumber);
+
+        if (adminUser == null)
+        {
+            _logger.LogWarning("Admin user not found by phone number.");
+            return;
+        }
+
+        var adminRole = await _context.Roles
+            .FirstOrDefaultAsync(r => r.Name == nameof(UserRoleEnum.Admin));
+
+        if (adminRole == null)
+        {
+            _logger.LogWarning("Admin role not found.");
+            return;
+        }
+
+        var alreadyAssigned = await _context.UserRoles
+            .AnyAsync(ur => ur.UserId == adminUser.Id && ur.RoleId == adminRole.Id);
+
+        if (!alreadyAssigned)
+        {
+            var userRole = new UserRole
+            {
+                UserId = adminUser.Id,
+                RoleId = adminRole.Id
+            };
+
+            await _context.UserRoles.AddAsync(userRole);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Admin role assigned to the user.");
+        }
+        else
+        {
+            _logger.LogInformation("Admin user already has the Admin role.");
+        }
     }
 }

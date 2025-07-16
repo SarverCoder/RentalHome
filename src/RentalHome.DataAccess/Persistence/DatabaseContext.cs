@@ -58,13 +58,13 @@ public class DatabaseContext : DbContext
     private void SeedData(ModelBuilder modelBuilder)
     {
         // 1. Avval Roles
-        modelBuilder.Entity<Role>().HasData(
+       /* modelBuilder.Entity<Role>().HasData(
             new Role { Id = 1, Name = "SuperAdmin", CreatedAt = DateTime.UtcNow },
             new Role { Id = 2, Name = "Admin", CreatedAt = DateTime.UtcNow },
             new Role { Id = 3, Name = "Landlord", CreatedAt = DateTime.UtcNow },
             new Role { Id = 4, Name = "Tenant", CreatedAt = DateTime.UtcNow }
         );
-
+*/
 
         // ID ni int turiga moslab to'g'riladim. Sizning IdConst klassingizni ham int ga o'zgartirishingiz kerak.
         const int seedUserId = 1; // SuperAdmin uchun ID, int turida
@@ -84,7 +84,7 @@ public class DatabaseContext : DbContext
                 PasswordHash = Encrypt(seedPassword,seedSalt),
                 PasswordSalt = seedSalt,
                 TokenExpiryTime = DateTime.MinValue,
-                CreatedAt = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.MinValue,
                 IsActive = true,
                 IsVerified = true
@@ -92,8 +92,8 @@ public class DatabaseContext : DbContext
         );
 
         // 3. Eng oxirida UserRoles
-        modelBuilder.Entity<UserRole>().HasData(
-            new UserRole { Id = 1, UserId = 1, RoleId = 1 }
-        );
+        //modelBuilder.Entity<UserRole>().HasData(
+        //    new UserRole { Id = 1, UserId = 1, RoleId = 1 }
+        //);
     }
 }

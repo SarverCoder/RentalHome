@@ -5,7 +5,6 @@ using RentalHome.Application.Models;
 using RentalHome.Application.Models.Landlord;
 using RentalHome.Application.Models.Tenant;
 using RentalHome.Application.Models.User;
-using RentalHome.Application.Services.Implementation;
 using RentalHome.Core.Entities;
 using RentalHome.DataAccess.Persistence;
 
@@ -62,7 +61,7 @@ public class UserService(
         await context.SaveChangesAsync();
 
         // Role assignment
-        string roleName = model.isAdminSite ? "Admin" : "User";
+        string roleName = "Seller";
         var defaultRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
 
         if (defaultRole == null)
@@ -89,7 +88,7 @@ public class UserService(
         await landlordService.AddAsync(createLandlordModel);
 
         var otp = await otpService.GenerateAndSaveOtpAsync(user.Id);
-        await emailService.SendOtpAsync(model.Email, otp);
+        
 
         return ApiResult<string>.Success("Landlord ro'yxatdan o'tdi. Email orqali tasdiqlang.");
     }
@@ -117,7 +116,7 @@ public class UserService(
         await context.SaveChangesAsync();
 
         // Role assignment
-        string roleName = model.isAdminSite ? "Admin" : "User";
+        string roleName = "Tenant";
         var defaultRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
 
         if (defaultRole == null)
@@ -143,7 +142,6 @@ public class UserService(
         await tenantService.CreateAsync(createTenantModel);
 
         var otp = await otpService.GenerateAndSaveOtpAsync(user.Id);
-        await emailService.SendOtpAsync(model.Email, otp);
 
         return ApiResult<string>.Success("Tenant ro'yxatdan o'tdi. Email orqali tasdiqlang.");
     }
