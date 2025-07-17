@@ -11,6 +11,7 @@ public class DatabaseContext : DbContext
     public DatabaseContext(DbContextOptions options) : base(options)
     { }
 
+    public DbSet<Logging> Logs { get; set; }
     public DbSet<UserOTPs> UserOTPs { get; set; }
     public DbSet<Amenity> Amenities { get; set; }
     public DbSet<Booking> Bookings { get; set; }
