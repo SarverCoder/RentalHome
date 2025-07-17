@@ -1,19 +1,27 @@
-using RentalHome.API.Extensions;
+﻿using RentalHome.API.Extensions;
 using RentalHome.API.Middlewares;
 using RentalHome.Application;
 using RentalHome.Application.Services.Implementation;
 using RentalHome.Application.Services;
 using RentalHome.DataAccess;
+using RentalHome.Infrastructure.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
+
+// Middleware & background service uchun kerak
+builder.Services.AddHttpContextAccessor();
+//builder.Services.AddTransient<LoggingMiddleware>();
+builder.Services.AddHostedService<RabbitMQConsumer>();
 
 builder.Services.AddSwagger();  
 builder.Services.AddMinIo(builder.Configuration);

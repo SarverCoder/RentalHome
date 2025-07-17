@@ -59,7 +59,9 @@ public class LoggingMiddleware
                 };
 
                 var json = JsonConvert.SerializeObject(log);
+                Console.WriteLine("LoggingMiddleware ishladi, JSON: " + json);
                 await _producer.SendMessageAsync(json);
+                Console.WriteLine("RabbitMQ ga yuborildi.");
             }
         }
 

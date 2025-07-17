@@ -1,8 +1,10 @@
-﻿namespace RentalHome.Core.Entities;
+﻿using RentalHome.Core.Common;
 
-public class UserOTPs
+namespace RentalHome.Core.Entities;
+
+public class UserOTPs :BaseEntity
 {
-    public int Id { get; set; }
+    
     public int UserId { get; set; }
     public string Code { get; set; } = null!;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
