@@ -40,9 +40,14 @@ public class UserService(
 
     public async Task<ApiResult<string>> RegisterLandlordAsync(RegisterLandlordModel model)
     {
-        var existingUser = await context.Users.FirstOrDefaultAsync(e => e.Email == model.Email);
-        if (existingUser != null)
+        var existingEmail = await context.Users.AnyAsync(e => e.Email == model.Email);
+        if (existingEmail)
             return ApiResult<string>.Failure(new[] { "Email allaqachon mavjud" });
+
+        var existingUserName = await context.Users.AnyAsync(x => x.UserName == model.UserName);
+        if (existingUserName)
+            return ApiResult<string>.Failure(new[] { "UserName allaqachon mavjud" });
+
 
         var salt = Guid.NewGuid().ToString();
         var hash = passwordHasher.Encrypt(model.Password, salt);
@@ -95,9 +100,13 @@ public class UserService(
 
     public async Task<ApiResult<string>> RegisterTenantAsync(RegisterTenantModel model)
     {
-        var existingUser = await context.Users.FirstOrDefaultAsync(e => e.Email == model.Email);
-        if (existingUser != null)
+        var existingEmail = await context.Users.AnyAsync(e => e.Email == model.Email);
+        if (existingEmail)
             return ApiResult<string>.Failure(new[] { "Email allaqachon mavjud" });
+
+        var existingUserName = await context.Users.AnyAsync(x => x.UserName == model.UserName);
+        if (existingUserName)
+            return ApiResult<string>.Failure(new[] { "UserName allaqachon mavjud" });
 
         var salt = Guid.NewGuid().ToString();
         var hash = passwordHasher.Encrypt(model.Password, salt);
