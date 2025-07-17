@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RentalHome.API.Attributes;
-using RentalHome.Application.Security.AuthEnums;
 using RentalHome.Application.Services;
 
 namespace RentalHome.API.Controllers
