@@ -59,8 +59,11 @@ public class AmenityService (DatabaseContext context ,IMapper  mapper) : IAmenit
             throw new NotFoundException("Amenity not found");
             return false;
         }
+        amenity.Name = dto.Name;
+        amenity.IconClass = dto.IconClass;
 
-        context.Amenities.Update(mapper.Map<Amenity>(dto));
+        context.Update(amenity);
+        
         await context.SaveChangesAsync();
         return true;
 
