@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalHome.Application.Models.Photo;
 using RentalHome.Application.Services;
+using System.IO;
+using System.Net;
 
 namespace RentalHome.API.Controllers;
 
@@ -15,10 +17,24 @@ public class PhotosController(IPhotoService service,
         return Ok(await service.GetPhotosAsync());
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("get-by/{id}")]
     public async Task<IActionResult> GetByIdPhoto(int id)
     {
         return Ok(service.GetPhotoAsync(id));
+    }
+
+    [HttpGet("get-by-url/{url}")]
+    public async Task<IActionResult> GetByUrlPhotoFromMinio(string url)
+    {
+        var filename = WebUtility.UrlDecode(url);
+        var result = await service.DonwloadImageFromMinio(filename);
+          
+
+
+        var contentType = service.GetMimeType(filename);
+
+        return File(result, contentType, filename);
+        //return new FileStreamResult(result, contentType);
     }
 
     [HttpPost("upload")]

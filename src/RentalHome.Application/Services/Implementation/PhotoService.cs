@@ -84,14 +84,15 @@ public class PhotoService : IPhotoService
         var bucket = _minioSettings.BucketName;
 
         var files = Directory.GetFiles("wwwroot/temp-upload");
-        for (int i = 0; i< files.Length; i++)
+        for (int i = 0; i < files.Length; i++)
         {
             var fileName = Path.GetFileName(files[i]);
 
 
             var contentType = GetMimeType(fileName);
 
-            for (int j = 0; j < fileNames.Count; j++) {
+            for (int j = 0; j < fileNames.Count; j++)
+            {
                 if (fileName == fileNames[j])
                 {
 
@@ -119,13 +120,21 @@ public class PhotoService : IPhotoService
                     continue;
                 }
             }
-            
+
 
         }
-        
-            await _context.SaveChangesAsync();
+
+        await _context.SaveChangesAsync();
     }
-    private string GetMimeType(string fileName)
+    public async Task<Stream> DonwloadImageFromMinio(string phtoUrl)
+    {
+        var photo = await _context.Photos.FirstOrDefaultAsync(x => x.Url == phtoUrl);
+
+        var stream = await _fileStorageService.DownloadFileAsync(_minioSettings.BucketName, phtoUrl);
+
+        return stream;
+    }
+    public string GetMimeType(string fileName)
     {
         var provider = new FileExtensionContentTypeProvider();
         if (!provider.TryGetContentType(fileName, out string contentType))
