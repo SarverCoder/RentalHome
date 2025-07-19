@@ -20,7 +20,7 @@ public class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
             .HasForeignKey(rp => rp.RoleId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasData(GenerateUserRoles());
+       // builder.HasData(GenerateUserRoles());
     }
 
     private static List<UserRole> GenerateUserRoles()

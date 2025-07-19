@@ -12,8 +12,8 @@ using RentalHome.DataAccess.Persistence;
 namespace RentalHome.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250706065228_initialMIgration")]
-    partial class initialMIgration
+    [Migration("20250717124830_Add_LoggingModel")]
+    partial class Add_LoggingModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,6 +144,45 @@ namespace RentalHome.DataAccess.Migrations
                     b.ToTable("Landlords");
                 });
 
+            modelBuilder.Entity("RentalHome.Core.Entities.LoggingModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs");
+                });
+
             modelBuilder.Entity("RentalHome.Core.Entities.Notification", b =>
                 {
                     b.Property<int>("Id")
@@ -268,11 +307,6 @@ namespace RentalHome.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AllowsPets")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -283,11 +317,6 @@ namespace RentalHome.DataAccess.Migrations
 
                     b.Property<int>("DistrictId")
                         .HasColumnType("integer");
-
-                    b.Property<bool>("IsFurnished")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
 
                     b.Property<int>("LandlordId")
                         .HasColumnType("integer");
@@ -582,6 +611,39 @@ namespace RentalHome.DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RentalHome.Core.Entities.UserOTPs", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ExpiredAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("UserOTPsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserOTPsId");
+
+                    b.ToTable("UserOTPs");
+                });
+
             modelBuilder.Entity("RentalHome.Core.Entities.UserRole", b =>
                 {
                     b.Property<int>("Id")
@@ -803,6 +865,21 @@ namespace RentalHome.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("RentalHome.Core.Entities.UserOTPs", b =>
+                {
+                    b.HasOne("RentalHome.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RentalHome.Core.Entities.UserOTPs", null)
+                        .WithMany("OtpCodes")
+                        .HasForeignKey("UserOTPsId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("RentalHome.Core.Entities.UserRole", b =>
                 {
                     b.HasOne("RentalHome.Core.Entities.Role", "Role")
@@ -898,6 +975,11 @@ namespace RentalHome.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("RentalHome.Core.Entities.UserOTPs", b =>
+                {
+                    b.Navigation("OtpCodes");
                 });
 #pragma warning restore 612, 618
         }

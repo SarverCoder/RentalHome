@@ -17,9 +17,12 @@ public class TenantService : ITenantService
         _databaseContext = databaseContext;
     }
 
-    public Task<Tenant> CreateAsync(CreateTenantModel createTenantModel)
+    public async Task CreateAsync(CreateTenantModel createTenantModel)
     {
-        throw new NotImplementedException();
+        var tenant = _mapper.Map<Tenant>(createTenantModel);
+        await _databaseContext.AddAsync(tenant);
+        await _databaseContext.SaveChangesAsync();
+
     }
 
     public Task<bool> DeleteAsync(int id)

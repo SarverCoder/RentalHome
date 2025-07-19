@@ -1,9 +1,13 @@
-﻿using RentalHome.Core.Common;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RentalHome.Core.Entities;
 
-public class Permission : BaseEntity
+public class Permission 
 {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    public int Id { get; set; }
     public string ShortName { get; set; } = null!;
     public string FullName { get; set; } = null!;
     public int PermissionGroupId { get; set; }

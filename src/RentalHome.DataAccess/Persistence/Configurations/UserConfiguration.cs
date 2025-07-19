@@ -40,7 +40,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValue(true);
 
 
-        builder.HasData(GetSeedUser());
+        //builder.HasData(GetSeedUser());
 
     }
 

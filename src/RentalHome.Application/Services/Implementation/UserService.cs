@@ -2,7 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Helpers.PasswordHashers;
 using RentalHome.Application.Models;
-using RentalHome.Application.Services.Implementation;
+using RentalHome.Application.Models.Landlord;
+using RentalHome.Application.Models.Tenant;
+using RentalHome.Application.Models.User;
 using RentalHome.Core.Entities;
 using RentalHome.DataAccess.Persistence;
 
@@ -14,7 +16,9 @@ public class UserService(
     IJwtTokenHandler jwtTokenHandler,
     IAuthService authService,
     IOtpService otpService,
-    IEmailService emailService
+    IEmailService emailService,
+    ILandlordService landlordService,
+    ITenantService tenantService
     ) : IUserService
 {
 
@@ -26,7 +30,7 @@ public class UserService(
 
         var otp = await otpService.GetLatestOtpAsync(user.Id, model.Code);
         if (otp is null || otp.ExpiredAt < DateTime.Now)
-            return ApiResult<string>.Failure(new[] { "Kod noto‘g‘ri yoki muddati tugagan." });
+            return ApiResult<string>.Failure(new[] { "Kod notogri yoki muddati tugagan." });
 
         user.IsVerified = true;
         await context.SaveChangesAsync();
@@ -34,41 +38,39 @@ public class UserService(
         return ApiResult<string>.Success("OTP muvaffaqiyatli tasdiqlandi.");
     }
 
-    public async Task<ApiResult<string>> RegisterAsync( string email, string password, string phoneNumber, string userName,bool isAdminSite)
+    public async Task<ApiResult<string>> RegisterLandlordAsync(RegisterLandlordModel model)
     {
-        var existingUser = await context.Users.FirstOrDefaultAsync(e => e.Email == email);
-        if (existingUser != null)
+        var existingEmail = await context.Users.AnyAsync(e => e.Email == model.Email);
+        if (existingEmail)
             return ApiResult<string>.Failure(new[] { "Email allaqachon mavjud" });
-       
+
+        var existingUserName = await context.Users.AnyAsync(x => x.UserName == model.UserName);
+        if (existingUserName)
+            return ApiResult<string>.Failure(new[] { "UserName allaqachon mavjud" });
+
 
         var salt = Guid.NewGuid().ToString();
-        var hash = passwordHasher.Encrypt(password, salt);
+        var hash = passwordHasher.Encrypt(model.Password, salt);
 
         var user = new User()
         {
-            
-            UserName = userName,
-            Email = email,
+            UserName = model.UserName,
+            Email = model.Email,
             PasswordHash = hash,
             PasswordSalt = salt,
-            PhoneNumber = phoneNumber,
+            PhoneNumber = model.PhoneNumber,
             IsActive = true
-            
-
         };
 
         await context.Users.AddAsync(user);
         await context.SaveChangesAsync();
 
-       
-
-        // --- Rolni isAdminSite ga qarab belgilash ---
-        string roleName = isAdminSite ? "Admin" : "User";
+        // Role assignment
+        string roleName = "Seller";
         var defaultRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
 
         if (defaultRole == null)
         {
-            // Agar kerakli rol topilmasa, xato qaytaramiz
             return ApiResult<string>.Failure(new[] { $"Tizimda '{roleName}' roli topilmadi. Admin bilan bog'laning." });
         }
 
@@ -78,15 +80,81 @@ public class UserService(
             RoleId = defaultRole.Id
         });
         await context.SaveChangesAsync();
-        // --- Rolni belgilash qismi tugadi ---
+
+        // Create Landlord
+        var createLandlordModel = new CreateLandlordModel
+        {
+            UserId = user.Id,
+            CompanyName = model.CompanyName,
+            Bio = model.Bio,
+            IsVerified = false
+        };
+
+        await landlordService.AddAsync(createLandlordModel);
 
         var otp = await otpService.GenerateAndSaveOtpAsync(user.Id);
-        await emailService.SendOtpAsync(email, otp);
+        
 
-        return ApiResult<string>.Success("Ro'yxatdan o'tdingiz. Email orqali tasdiqlang.");
-
-
+        return ApiResult<string>.Success("Landlord ro'yxatdan o'tdi. Email orqali tasdiqlang.");
     }
+
+    public async Task<ApiResult<string>> RegisterTenantAsync(RegisterTenantModel model)
+    {
+        var existingEmail = await context.Users.AnyAsync(e => e.Email == model.Email);
+        if (existingEmail)
+            return ApiResult<string>.Failure(new[] { "Email allaqachon mavjud" });
+
+        var existingUserName = await context.Users.AnyAsync(x => x.UserName == model.UserName);
+        if (existingUserName)
+            return ApiResult<string>.Failure(new[] { "UserName allaqachon mavjud" });
+
+        var salt = Guid.NewGuid().ToString();
+        var hash = passwordHasher.Encrypt(model.Password, salt);
+
+        var user = new User()
+        {
+            UserName = model.UserName,
+            Email = model.Email,
+            PasswordHash = hash,
+            PasswordSalt = salt,
+            PhoneNumber = model.PhoneNumber,
+            IsActive = true
+        };
+
+        await context.Users.AddAsync(user);
+        await context.SaveChangesAsync();
+
+        // Role assignment
+        string roleName = "Tenant";
+        var defaultRole = await context.Roles.FirstOrDefaultAsync(r => r.Name == roleName);
+
+        if (defaultRole == null)
+        {
+            return ApiResult<string>.Failure(new[] { $"Tizimda '{roleName}' roli topilmadi. Admin bilan bog'laning." });
+        }
+
+        context.UserRoles.Add(new UserRole
+        {
+            UserId = user.Id,
+            RoleId = defaultRole.Id
+        });
+        await context.SaveChangesAsync();
+
+        // Create Tenant
+        var createTenantModel = new CreateTenantModel
+        {
+            UserId = user.Id,
+            Latitude = model.Latitude,
+            Longitude = model.Longitude
+        };
+
+        await tenantService.CreateAsync(createTenantModel);
+
+        var otp = await otpService.GenerateAndSaveOtpAsync(user.Id);
+
+        return ApiResult<string>.Success("Tenant ro'yxatdan o'tdi. Email orqali tasdiqlang.");
+    }
+
 
     public async Task<ApiResult<LoginResponseModel>> LoginAsync(LoginUserModel model)
     {
@@ -96,7 +164,7 @@ public class UserService(
             return ApiResult<LoginResponseModel>.Failure(new[] { "Foydalanuvchi topilmadi" });
 
         if (!passwordHasher.Verify(user.PasswordHash, model.Password, user.PasswordSalt))
-            return ApiResult<LoginResponseModel>.Failure(new[] { "Parol noto‘g‘ri" });
+            return ApiResult<LoginResponseModel>.Failure(new[] { "Parol notogri" });
 
         if (!user.IsActive)
             return ApiResult<LoginResponseModel>.Failure(new[] { "Email tasdiqlanmagan" });

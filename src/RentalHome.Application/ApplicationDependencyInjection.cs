@@ -8,6 +8,8 @@ using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Helpers.PasswordHashers;
 using RentalHome.Application.Services;
 using RentalHome.Application.Services.Implementation;
+using RentalHome.Core.Entities;
+using RentalHome.Infrastructure.Consumers;
 using System.Text;
 
 namespace RentalHome.Application;
@@ -47,6 +49,12 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IFileStorageService, MinioFileStorageService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IOtpService, OtpService>();
+        services.AddScoped<IDataSeedService, DataSeedService>();
+
+        services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
+
+        
+
 
 
     }

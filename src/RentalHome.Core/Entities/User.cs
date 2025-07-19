@@ -14,7 +14,7 @@ public class User : BaseEntity
     public string? RefreshToken { get; set; }
     public DateTime TokenExpiryTime { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
     public bool IsActive { get; set; }
     public bool IsVerified { get; set; }
 

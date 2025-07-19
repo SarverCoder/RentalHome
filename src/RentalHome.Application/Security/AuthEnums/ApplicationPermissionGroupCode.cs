@@ -4,5 +4,10 @@ public enum ApplicationPermissionGroupCode
 {
     User,
     Role,
-    Permission
+    Permission,
+    Amenity,
+    Booking,
+    District,
+    Property,
+    Region
 }
