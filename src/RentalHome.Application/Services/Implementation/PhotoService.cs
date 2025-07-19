@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel;
 using RentalHome.Application.Common;
@@ -18,12 +19,16 @@ public class PhotoService : IPhotoService
     private readonly IFileStorageService _fileStorageService;
     private readonly MinioSettings _minioSettings;
 
-    public PhotoService(DatabaseContext context, IMapper mapper, IFileStorageService fileStorageService, MinioSettings minioSettings)
+    public PhotoService(
+        DatabaseContext context,
+        IMapper mapper,
+        IFileStorageService fileStorageService,
+        IOptions<MinioSettings> minioSettings)
     {
         _context = context;
         _mapper = mapper;
         _fileStorageService = fileStorageService;
-        _minioSettings = minioSettings;
+        _minioSettings = minioSettings.Value;
     }
     public Task<IQueryable<PhotoModel>> GetPhotosAsync()
     {

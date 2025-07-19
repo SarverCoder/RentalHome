@@ -64,14 +64,14 @@ app.UseSwaggerUI();
 //}
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
-#if !DEBUG
-app.UseMiddleware<LoggingMiddleware>();
-#else
+
+// app.UseMiddleware<LoggingMiddleware>();
+
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-#endif
+
 app.MapControllers();
 
 app.Run();

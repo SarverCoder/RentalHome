@@ -8,8 +8,6 @@ using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Helpers.PasswordHashers;
 using RentalHome.Application.Services;
 using RentalHome.Application.Services.Implementation;
-using RentalHome.Core.Entities;
-using RentalHome.Infrastructure.Consumers;
 using System.Text;
 
 namespace RentalHome.Application;
@@ -41,7 +39,6 @@ public static class ApplicationDependencyInjection
         services.AddScoped<ILandlordService, LandlordService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IAmenityService, AmenityService>();
-        services.AddScoped<IPropertyService, PropertyService>();
         services.AddScoped<IRegionService, RegionService>();
         services.AddScoped<IDistrictService, DistrictService>();
         services.AddScoped<IPermissionService, PermissionService>();
@@ -50,6 +47,7 @@ public static class ApplicationDependencyInjection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IOtpService, OtpService>();
         services.AddScoped<IDataSeedService, DataSeedService>();
+       
 
         services.AddSingleton<IRabbitMQProducer, RabbitMQProducer>();
 
@@ -110,5 +108,6 @@ public static class ApplicationDependencyInjection
     public static void AddEmailConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<EmailConfiguration>(configuration.GetSection("EmailConfiguration"));
+        
     }
 }
