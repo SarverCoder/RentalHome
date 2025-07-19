@@ -52,18 +52,20 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 //Seed roles and permissions on application startup
-using (var scope = app.Services.CreateScope())
-{
-    var dataSeedService = scope.ServiceProvider.GetRequiredService<IDataSeedService>();
-    await dataSeedService.SeedRolesAndPermissionsAsync();
-}
-
 if (builder.Environment.IsProduction() && builder.Configuration.GetValue<int?>("POST") is not null)
     builder.WebHost.UseUrls($"http://*:{builder.Configuration.GetValue<int>("POST")}");
 
 
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DatabaseContext>();
 await context.Database.MigrateAsync();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var dataSeedService = scope.ServiceProvider.GetRequiredService<IDataSeedService>();
+    await dataSeedService.SeedRolesAndPermissionsAsync();
+}
+
 
 
 
