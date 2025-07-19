@@ -6,7 +6,8 @@ namespace RentalHome.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PhotosController(IPhotoService service) : ControllerBase
+public class PhotosController(IPhotoService service,
+    IFileStorageService fileStorageService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetAllPhotos()
@@ -20,18 +21,20 @@ public class PhotosController(IPhotoService service) : ControllerBase
         return Ok(service.GetPhotoAsync(id));
     }
 
-
-    [HttpPost]
-    public async Task<IActionResult> CreatePhoto([FromBody] CreatePhotoModel request)
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadPhoto(IFormFile file)
     {
-        var res = await service.CreatePhotoAsync(request);
-
-        if (!res.IsSuccess)
+        if (file == null || file.Length == 0)
         {
-            return BadRequest();
+            return BadRequest("Fayl tanlanmagan yoki bo'sh.");
         }
 
-        return Ok(res);
+        // Fayl nomini noyob qilish uchun Guid va original kengaytmadan foydalanamiz
+        
+        await service.UploadToFileStorageAsync(file);
+
+        return Ok();
+    
     }
 
     [HttpDelete("{Id}")]
