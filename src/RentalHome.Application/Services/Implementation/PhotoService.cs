@@ -146,12 +146,22 @@ public class PhotoService : IPhotoService
 
 
 
-    public async Task<ResponsePhotoModel> DeletePhotoAsync(int id)
+    public async Task<ResponsePhotoModel> DeletePhotoAsync(string url)
     {
-        var photo = await _context.Photos.FirstOrDefaultAsync(key => key.Id == id);
+        var photo = await _context.Photos.FirstOrDefaultAsync(key => key.Url == url);
 
         if (photo is null)
             throw new Exception("Not found");
+
+        if (! await _fileStorageService.FileExistsAsync(_minioSettings.BucketName, url))
+        {
+            return new ResponsePhotoModel()
+            {
+                IsSuccess = false,
+                Status = "There is no photo with name"
+            };
+        }
+        await _fileStorageService.RemoveFileAsync(_minioSettings.BucketName, url);
 
         _context.Remove(photo);
         await _context.SaveChangesAsync();

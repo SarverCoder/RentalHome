@@ -11,11 +11,6 @@ namespace RentalHome.API.Controllers;
 public class PhotosController(IPhotoService service,
     IFileStorageService fileStorageService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllPhotos()
-    {
-        return Ok(await service.GetPhotosAsync());
-    }
 
     [HttpGet("get-by/{id}")]
     public async Task<IActionResult> GetByIdPhoto(int id)
@@ -53,10 +48,11 @@ public class PhotosController(IPhotoService service,
     
     }
 
-    [HttpDelete("{Id}")]
-    public async Task<IActionResult> DeleteByIdPhoto(int id)
+    [HttpDelete("delete-by/{url}")]
+    public async Task<IActionResult> DeleteByUrlPhoto(string url)
     {
-        var res = await service.DeletePhotoAsync(id);
+        var filename = WebUtility.UrlDecode(url);
+        var res = await service.DeletePhotoAsync(filename);
 
         if (!res.IsSuccess)
         {
