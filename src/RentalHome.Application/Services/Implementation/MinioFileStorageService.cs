@@ -67,13 +67,13 @@ public class MinioFileStorageService : IFileStorageService
         {
             var memoryStream = new MemoryStream();
             await _minioClient.GetObjectAsync(
-                new GetObjectArgs()
-                    .WithBucket(bucketName)
-                    .WithObject(objectName)
-                    .WithCallbackStream(async (stream) => // Fayl streamini memoryStream ga nusxalash
-                    {
-                        await stream.CopyToAsync(memoryStream);
-                    })
+              new GetObjectArgs()
+                .WithBucket(bucketName)
+                .WithObject(objectName)
+                .WithCallbackStream(stream =>
+                {
+                    stream.CopyTo(memoryStream);
+                })
             ).ConfigureAwait(false);
 
             memoryStream.Position = 0; // Streamni boshiga qaytarish, chunki undan o'qish mumkin bo'lishi uchun
@@ -85,7 +85,6 @@ public class MinioFileStorageService : IFileStorageService
             throw;
         }
     }
-
     public async Task<bool> FileExistsAsync(string bucketName, string objectName)
     {
         try

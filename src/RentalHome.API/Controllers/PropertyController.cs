@@ -36,6 +36,9 @@ public class PropertyController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreatePropertyModel model)
     {
         var result = await _propertyService.CreateAsync(model);
+
+        
+
         return Ok(result);
     }
 

@@ -8,6 +8,12 @@ public class PropertyProfile : Profile
 {
     public PropertyProfile()
     {
+        CreateMap<CreatePropertyModel, Property>();
+        CreateMap<UpdatePropertyModel, Property>();
+        CreateMap<Property, PropertyModel>()
+           .ForMember(dest => dest.PhotoUrls, opt => opt.MapFrom(src => src.Photos.Select(p => p.Url).ToList()));
+
+
         CreateMap<CreatePropertyModel, Property>().ReverseMap();
         CreateMap<UpdatePropertyModel, Property>().ReverseMap();
         CreateMap<Property, PropertyModel>()
