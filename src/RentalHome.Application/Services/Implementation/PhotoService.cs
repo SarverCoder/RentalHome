@@ -62,57 +62,83 @@ public class PhotoService : IPhotoService
         };
     }
 
-    public async Task UploadToFileStorageAsync(IFormFile file)
+    public async Task<string> UploadToFileStorageAsync(IFormFile file)
     {
         var fileExtension = Path.GetExtension(file.FileName);
         var objectName = $"{Guid.NewGuid()}{fileExtension}"; // Minio'da saqlanadigan fayl nomi
 
-        var pa = "C:\\Users\\User\\temp-upload";
-        Directory.CreateDirectory(pa);
+        var path = "wwwroot/temp-upload";
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
 
-        var tempPath = Path.Combine(pa, objectName);
+        var tempPath = Path.Combine(path, objectName);
 
 
         using (var stream = new FileStream(tempPath, FileMode.Create))
         {
             file.CopyTo(stream);
         }
+        return objectName;
     }
 
-    public async Task TransferTempImagesToMinio(int propertyId)
+    public async Task TransferTempImagesToMinio(int propertyId, IList<string> fileNames)
     {
         var bucket = _minioSettings.BucketName;
 
-       
-        foreach (var tempImageName in Directory.GetFiles("C:\\Users\\User\\temp-upload"))
+        var files = Directory.GetFiles("wwwroot/temp-upload");
+        for (int i = 0; i < files.Length; i++)
         {
-            var fileName = Path.GetFileName(tempImageName);
-            var objectKey = $"property/{propertyId}/{fileName}";
+            var fileName = Path.GetFileName(files[i]);
+
 
             var contentType = GetMimeType(fileName);
 
-            using (var fileStream = File.OpenRead(tempImageName))
-            using (var memoryStream = new MemoryStream())
+            for (int j = 0; j < fileNames.Count; j++)
             {
-                await fileStream.CopyToAsync(memoryStream);
-                memoryStream.Position = 0; // Reset position after copying
-                await _fileStorageService.UploadFileAsync(bucket, objectKey, memoryStream, contentType);
+                if (fileName == fileNames[j])
+                {
 
+                    var objectKey = $"property/{propertyId}/{fileName}";
+                    using (var fileStream = File.OpenRead(files[i]))
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await fileStream.CopyToAsync(memoryStream);
+                        memoryStream.Position = 0; // Reset position after copying
+                        await _fileStorageService.UploadFileAsync(bucket, objectKey, memoryStream, contentType);
+
+                    }
+
+                    await _context.Photos.AddAsync(new Photo()
+                    {
+
+                        PropertyId = propertyId,
+                        Url = objectKey
+                    });
+
+
+                    // Delete temp file
+                    File.Delete(files[i]);
+
+                    continue;
+                }
             }
 
-            await _context.Photos.AddAsync(new Photo()
-            {
-                
-                PropertyId = propertyId,
-                Url = objectKey
-            });
-            await _context.SaveChangesAsync();
 
-            // Delete temp file
-            File.Delete(tempImageName);
         }
+
+        await _context.SaveChangesAsync();
     }
-    private string GetMimeType(string fileName)
+    public async Task<Stream> DonwloadImageFromMinio(string phtoUrl)
+    {
+        var photo = await _context.Photos.FirstOrDefaultAsync(x => x.Url == phtoUrl);
+
+        var stream = await _fileStorageService.DownloadFileAsync(_minioSettings.BucketName, phtoUrl);
+
+        return stream;
+    }
+    public string GetMimeType(string fileName)
     {
         var provider = new FileExtensionContentTypeProvider();
         if (!provider.TryGetContentType(fileName, out string contentType))
@@ -124,12 +150,22 @@ public class PhotoService : IPhotoService
 
 
 
-    public async Task<ResponsePhotoModel> DeletePhotoAsync(int id)
+    public async Task<ResponsePhotoModel> DeletePhotoAsync(string url)
     {
-        var photo = await _context.Photos.FirstOrDefaultAsync(key => key.Id == id);
+        var photo = await _context.Photos.FirstOrDefaultAsync(key => key.Url == url);
 
         if (photo is null)
             throw new Exception("Not found");
+
+        if (! await _fileStorageService.FileExistsAsync(_minioSettings.BucketName, url))
+        {
+            return new ResponsePhotoModel()
+            {
+                IsSuccess = false,
+                Status = "There is no photo with name"
+            };
+        }
+        await _fileStorageService.RemoveFileAsync(_minioSettings.BucketName, url);
 
         _context.Remove(photo);
         await _context.SaveChangesAsync();

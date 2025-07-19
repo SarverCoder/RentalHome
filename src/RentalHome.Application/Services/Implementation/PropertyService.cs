@@ -30,7 +30,7 @@ public class PropertyService : IPropertyService
             await _context.Properties.AddAsync(property);
             await _context.SaveChangesAsync();
 
-            await _photoService.TransferTempImagesToMinio(property.Id);
+            await _photoService.TransferTempImagesToMinio(property.Id,model.FileNames);
 
             return new PropertyResponseModel
             {

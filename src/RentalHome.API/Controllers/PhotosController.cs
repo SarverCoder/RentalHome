@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalHome.Application.Models.Photo;
 using RentalHome.Application.Services;
+using System.IO;
+using System.Net;
 
 namespace RentalHome.API.Controllers;
 
@@ -9,16 +11,25 @@ namespace RentalHome.API.Controllers;
 public class PhotosController(IPhotoService service,
     IFileStorageService fileStorageService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetAllPhotos()
-    {
-        return Ok(await service.GetPhotosAsync());
-    }
 
-    [HttpGet("{id}")]
+    [HttpGet("get-by/{id}")]
     public async Task<IActionResult> GetByIdPhoto(int id)
     {
         return Ok(service.GetPhotoAsync(id));
+    }
+
+    [HttpGet("get-by-url/{url}")]
+    public async Task<IActionResult> GetByUrlPhotoFromMinio(string url)
+    {
+        var filename = WebUtility.UrlDecode(url);
+        var result = await service.DonwloadImageFromMinio(filename);
+          
+
+
+        var contentType = service.GetMimeType(filename);
+
+        return File(result, contentType, filename);
+        //return new FileStreamResult(result, contentType);
     }
 
     [HttpPost("upload")]
@@ -31,16 +42,17 @@ public class PhotosController(IPhotoService service,
 
         // Fayl nomini noyob qilish uchun Guid va original kengaytmadan foydalanamiz
         
-        await service.UploadToFileStorageAsync(file);
+        var result = await service.UploadToFileStorageAsync(file);
 
-        return Ok();
+        return Ok(result);
     
     }
 
-    [HttpDelete("{Id}")]
-    public async Task<IActionResult> DeleteByIdPhoto(int id)
+    [HttpDelete("delete-by/{url}")]
+    public async Task<IActionResult> DeleteByUrlPhoto(string url)
     {
-        var res = await service.DeletePhotoAsync(id);
+        var filename = WebUtility.UrlDecode(url);
+        var res = await service.DeletePhotoAsync(filename);
 
         if (!res.IsSuccess)
         {
