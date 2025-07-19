@@ -3,8 +3,6 @@ using RentalHome.API.Middlewares;
 using Microsoft.EntityFrameworkCore;
 using RentalHome.Application;
 using RentalHome.Application.Services;
-using RentalHome.Application.Services.Implementation;
-using RentalHome.Application.Services;
 using RentalHome.DataAccess;
 using RentalHome.Infrastructure.Consumers;
 using RentalHome.DataAccess.Persistence;
@@ -21,12 +19,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();
 
-#if !DEBUG
+
 // Middleware & background service uchun kerak
 builder.Services.AddHttpContextAccessor();
 //builder.Services.AddTransient<LoggingMiddleware>();
 builder.Services.AddHostedService<RabbitMQConsumer>();
-#else
+
 
 builder.Services.AddSwagger();  
 builder.Services.AddMinIo(builder.Configuration);
@@ -48,7 +46,7 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-#endif
+
 
 
 var app = builder.Build();
@@ -77,7 +75,9 @@ app.UseSwaggerUI();
 //}
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
-
+#if !DEBUG
+app.UseMiddleware<LoggingMiddleware>();
+#else
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
