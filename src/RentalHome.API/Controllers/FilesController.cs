@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using RentalHome.Application.Common;
 using RentalHome.Application.Services;
 
 namespace RentalHome.API.Controllers;
@@ -8,16 +10,18 @@ namespace RentalHome.API.Controllers;
 public class FilesController : ControllerBase
 {
     private readonly IFileStorageService _fileStorageService;
+    private readonly MinioSettings _minioSettings;
 
     // Dependency Injection orqali IFileStorageService ni oladi
-    public FilesController(IFileStorageService fileStorageService)
+    public FilesController(IFileStorageService fileStorageService, IOptions<MinioSettings> minioSettings)
     {
         _fileStorageService = fileStorageService;
+        _minioSettings = minioSettings.Value;
     }
 
     [HttpPost("upload")]
     [Consumes("multipart/form-data")] // Fayl yuklash uchun shart
-    public async Task<IActionResult> UploadFile(IFormFile file, [FromQuery] string bucketName = "my-test-bucket")
+    public async Task<IActionResult> UploadFile(IFormFile file)
     {
         if (file == null || file.Length == 0)
         {
@@ -30,7 +34,7 @@ public class FilesController : ControllerBase
 
         using (var stream = file.OpenReadStream()) // Fayl streamini ochish
         {
-            var fileUrl = await _fileStorageService.UploadFileAsync(bucketName, objectName, stream, file.ContentType);
+            var fileUrl = await _fileStorageService.UploadFileAsync(_minioSettings.BucketName, objectName, stream, file.ContentType);
             return Ok(new { Message = "Fayl muvaffaqiyatli yuklandi.", FileUrl = fileUrl });
         }
     }

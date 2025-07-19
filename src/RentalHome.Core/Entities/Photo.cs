@@ -7,7 +7,6 @@ public  class Photo:BaseEntity
     public int PropertyId { get; set; }
     public string Url { get; set; }
     public bool IsMain { get; set; }
-    public int Order  { get; set; }
 
     public Property Property { get; set; }
 }
