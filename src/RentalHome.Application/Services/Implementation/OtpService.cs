@@ -41,9 +41,11 @@ public class OtpService : IOtpService
 
     public async Task<UserOTPs?> GetLatestOtpAsync(int userId, string code)
     {
-        return await _context.UserOTPs
-            .Where(o => o.UserId == userId && o.Code == code && o.ExpiredAt > DateTime.Now)
+        var otp = await _context.UserOTPs
+            .Where(o => o.UserId == userId && o.Code == code)
             .OrderByDescending(o => o.CreatedAt)
             .FirstOrDefaultAsync();
+
+        return otp;
     }
 }
