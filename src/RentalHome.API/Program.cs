@@ -75,9 +75,7 @@ app.UseSwaggerUI();
 //}
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
-#if !DEBUG
-app.UseMiddleware<LoggingMiddleware>();
-#else
+
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
