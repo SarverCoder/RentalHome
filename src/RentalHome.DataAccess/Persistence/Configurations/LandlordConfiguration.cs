@@ -20,10 +20,6 @@ public class LandlordConfiguration : IEntityTypeConfiguration<Landlord>
                .HasColumnType("text")
                .IsRequired(false);
 
-        builder.Property(l => l.IsVerified)
-                .HasDefaultValue(false)
-                .IsRequired();
-
         builder.HasOne(rp => rp.User)
                .WithOne(r => r.Landlord)
                .HasForeignKey<Landlord>(l => l.UserId)

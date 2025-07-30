@@ -181,25 +181,35 @@ public class DataSeedService : IDataSeedService
 
         // Define role-permission mappings  
         var rolePermissions = new Dictionary<int, ApplicationPermissionCode[]>();
-        
-        // Add Admin permissions (Admin = 1)
-        rolePermissions.Add((int)UserRoleEnum.Admin, new[]
-        {
-            ApplicationPermissionCode.UserCreate,
-            ApplicationPermissionCode.UserRead,
-            ApplicationPermissionCode.GetPermissions
-        });
-        
-        // Add Seller permissions (Seller = 2)
+
+        rolePermissions.Add((int)UserRoleEnum.Admin, Enum.GetValues<ApplicationPermissionCode>());
+
         rolePermissions.Add((int)UserRoleEnum.Seller, new[]
         {
-            ApplicationPermissionCode.UserRead
+            ApplicationPermissionCode.UserRead,
+            ApplicationPermissionCode.GetProperty,
+            ApplicationPermissionCode.GetProperties,
+            ApplicationPermissionCode.CreateProperty,
+            ApplicationPermissionCode.UpdateProperty,
+            ApplicationPermissionCode.DeleteProperty,
+            ApplicationPermissionCode.GetDistricts,
+            ApplicationPermissionCode.GetRegions,
+            ApplicationPermissionCode.GetAmenities,
+            ApplicationPermissionCode.GetBooking,
+            ApplicationPermissionCode.GetBookings,
         });
-        
-        // Add Tenant permissions (Tenant = 3)  
-        rolePermissions.Add(3, new[]  // Tenant enum value
+
+        rolePermissions.Add((int)UserRoleEnum.Tenant, new[]
         {
-            ApplicationPermissionCode.UserRead
+            ApplicationPermissionCode.UserRead,
+            ApplicationPermissionCode.GetProperty,
+            ApplicationPermissionCode.GetProperties,
+            ApplicationPermissionCode.GetDistricts,
+            ApplicationPermissionCode.GetRegions,
+            ApplicationPermissionCode.GetAmenities,
+            ApplicationPermissionCode.CreateBooking,
+            ApplicationPermissionCode.GetBookings,
+            ApplicationPermissionCode.DeleteBooking
         });
 
         foreach (var rolePermission in rolePermissions)
