@@ -59,16 +59,6 @@ public static class ApplicationDependencyInjection
     private static void RegisterAutoMapper(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(IUserService));
-        services.AddAutoMapper(typeof(ITenantService));
-        services.AddAutoMapper(typeof(IPropertyService));
-        services.AddAutoMapper(typeof(IPhotoService));
-        services.AddAutoMapper(typeof(ILandlordService));
-        services.AddAutoMapper(typeof(IBookingService));
-        services.AddAutoMapper(typeof(IAmenityService));
-        services.AddAutoMapper(typeof(IDistrictService));
-        services.AddAutoMapper(typeof(IRegionService));
-
-
     }
 
     public static IServiceCollection AddAuth(this IServiceCollection serviceCollection, IConfiguration configuration)

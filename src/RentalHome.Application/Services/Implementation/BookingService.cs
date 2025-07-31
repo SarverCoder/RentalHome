@@ -1,37 +1,57 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using RentalHome.Application.Models;
 using RentalHome.Application.Models.Booking;
 using RentalHome.Core.Entities;
+using RentalHome.Core.Exceptions;
 using RentalHome.DataAccess.Persistence;
 
 namespace RentalHome.Application.Services;
 
 public class BookingService(DatabaseContext context, IMapper mapper) : IBookingService
 {
-    public async Task AddAsync(CreateBookingModel createBookingModel)
+    public async Task<ApiResult<string>> AddAsync(CreateBookingModel createBookingModel)
     {
         var booking = mapper.Map<Booking>(createBookingModel);
+
         await context.Bookings.AddAsync(booking);
         await context.SaveChangesAsync();
+
+        return ApiResult<string>.Success("Booking taratildi.");
     }
 
-    public Task<bool> UpdateAsync(UpdateBookingModel updateBookingModel)
+    public async Task<ApiResult<string>> UpdateAsync(int id, UpdateBookingModel updateBookingModel)
     {
-        throw new NotImplementedException();
+        var booking = await context.Bookings.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (booking == null) 
+            return ApiResult<string>.Failure(new List<string>(){"Booking topilmadi"});
+
+        mapper.Map(booking, updateBookingModel);
+        await context.SaveChangesAsync();
+
+        return ApiResult<string>.Success("Booking yangilandi");
+
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<ApiResult<string>> DeleteAsync(int id)
     {
-        var booking = await context.Bookings.FindAsync(id);
-        if(booking is null) return false;
+        var booking = await context.Bookings.FirstOrDefaultAsync(x => x.Id == id);
+        if(booking is null) 
+            return ApiResult<string>.Failure([$"{id} ga tegishli Booking topilmadi"]);
         
         context.Bookings.Remove(booking);
-        return await context.SaveChangesAsync() > 0;
+        await context.SaveChangesAsync();
+
+        return ApiResult<string>.Success("Booking ochirildi");
     }
 
     public async Task<BookingModel> GetByIdAsync(int id)
     {
-        var booking = await context.Bookings.FindAsync(id); 
+        var booking = await context.Bookings.FirstOrDefaultAsync(x => x.Id == id);
+        if (booking is null)
+            throw new NotFoundException("Booking not found");
+
         return mapper.Map<BookingModel>(booking);
     }
 
