@@ -3,7 +3,6 @@
 public class CreatePropertyModel
 {
     public int LandlordId { get; set; }
-
     public int DistrictId { get; set; }
     public int RegionId { get; set; }
     public string Title { get; set; }

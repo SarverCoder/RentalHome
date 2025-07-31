@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalHome.API.Attributes;
+using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Models;
+using RentalHome.Application.Models.Token;
 using RentalHome.Application.Models.User;
 using RentalHome.Application.Services;
 
@@ -62,5 +64,32 @@ public class AuthenticationController(IUserService userService) : ControllerBase
         }
         return BadRequest(result);
     }
+
+    [Authorize]
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestModel model)
+    {
+        var result = await userService.RefreshTokenAsync(model);
+        if (!result.Succeeded)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var userId = User.FindFirst(CustomClaimNames.Id)?.Value;
+        if (userId is null) return Unauthorized();
+
+        var result = await userService.LogoutAsync(int.Parse(userId));
+        if (!result.Succeeded)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
+
 
 }

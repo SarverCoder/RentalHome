@@ -21,5 +21,9 @@
   <ItemGroup>
     <ProjectReference Include="..\RentalHome.DataAccess\RentalHome.DataAccess.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Models\Review\" />
+  </ItemGroup>
 
 </Project>
