@@ -8,7 +8,7 @@ namespace RentalHome.API.Controllers;
 public class ReviewController : ControllerBase
 {
 
-    [HttpPost("CreateReview")]
+    [HttpPost]
     public async Task<IActionResult> CreateReview([FromBody] CreateReviewModel model)
     {
         return Ok();
@@ -20,7 +20,7 @@ public class ReviewController : ControllerBase
         return Ok();
     }
 
-    [HttpGet("Property/{propId}")]
+    [HttpGet("property/{propId}")]
     public async Task<IActionResult> GetAllReviewsForProperty(int propId)
     {
         return Ok();

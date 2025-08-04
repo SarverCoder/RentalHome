@@ -12,7 +12,7 @@ namespace RentalHome.API.Controllers;
 [ApiController]
 public class AuthenticationController(IUserService userService) : ControllerBase
 {
-    [HttpPost("RegisterLandlord")]
+    [HttpPost("register-landlord")]
     public async Task<IActionResult> RegisterLandlord(RegisterLandlordModel model)
     {
         var result = await userService.RegisterLandlordAsync(model);
@@ -23,7 +23,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("RegisterTenant")]
+    [HttpPost("register-tenant")]
     public async Task<IActionResult> RegisterTenant(RegisterTenantModel model)
     {
         var result = await userService.RegisterTenantAsync(model);
@@ -35,7 +35,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
     }
 
 
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginUser(LoginUserModel model)
     {
         var result = await userService.LoginAsync(model);
@@ -54,7 +54,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("Get-User-Auth")]
+    [HttpGet("get-user-auth")]
     public async Task<IActionResult> GetUserAuth()
     {
         var result = await userService.GetUserAuth();
@@ -89,6 +89,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
 
         return Ok(result);
     }
+
 
 
 
