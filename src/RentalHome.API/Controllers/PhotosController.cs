@@ -15,7 +15,7 @@ public class PhotosController(IPhotoService service,
     [HttpGet("get-by/{id}")]
     public async Task<IActionResult> GetByIdPhoto(int id)
     {
-        return Ok(service.GetPhotoAsync(id));
+        return Ok(await service.GetPhotoAsync(id));
     }
 
     [HttpGet("get-by-url/{url}")]
