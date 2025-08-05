@@ -8,5 +8,5 @@ public  class Photo:BaseEntity
     public string Url { get; set; }
     public bool IsMain { get; set; }
 
-    public Property Property { get; set; }
+    public Property Property { get; set;  }
 }
