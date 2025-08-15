@@ -9,7 +9,13 @@ namespace RentalHome.DataAccess.Persistence;
 public class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions options) : base(options)
-    { }
+    {
+#if DEBUG
+
+#else
+            Database.Migrate();
+#endif
+    }
 
     public DbSet<Logging> Logs { get; set; }
     public DbSet<UserOTPs> UserOTPs { get; set; }
