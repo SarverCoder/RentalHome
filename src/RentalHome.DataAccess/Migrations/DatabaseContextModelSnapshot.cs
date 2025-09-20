@@ -141,7 +141,7 @@ namespace RentalHome.DataAccess.Migrations
                     b.ToTable("Landlords");
                 });
 
-            modelBuilder.Entity("RentalHome.Core.Entities.LoggingModel", b =>
+            modelBuilder.Entity("RentalHome.Core.Entities.Logging", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -568,7 +568,7 @@ namespace RentalHome.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 7, 16, 20, 40, 12, 922, DateTimeKind.Utc).AddTicks(5142),
+                            CreatedAt = new DateTime(2025, 8, 15, 13, 57, 9, 814, DateTimeKind.Utc).AddTicks(1543),
                             Email = "superadmin@example.com",
                             Fullname = "Adminjon",
                             IsActive = true,

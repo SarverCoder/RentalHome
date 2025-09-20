@@ -1,10 +1,9 @@
-﻿using RentalHome.API.Extensions;
+﻿using Microsoft.EntityFrameworkCore;
+using RentalHome.API.Extensions;
 using RentalHome.API.Middlewares;
-using Microsoft.EntityFrameworkCore;
 using RentalHome.Application;
 using RentalHome.Application.Services;
 using RentalHome.DataAccess;
-using RentalHome.Infrastructure.Consumers;
 using RentalHome.DataAccess.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,10 +40,6 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
-
-//Seed roles and permissions on application startup
-if (builder.Environment.IsProduction() && builder.Configuration.GetValue<int?>("POST") is not null)
-    builder.WebHost.UseUrls($"http://*:{builder.Configuration.GetValue<int>("POST")}");
 
 
 var context = app.Services.CreateScope().ServiceProvider.GetRequiredService<DatabaseContext>();

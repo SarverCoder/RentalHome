@@ -27,6 +27,25 @@ namespace RentalHome.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Logs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false),
+                    Path = table.Column<string>(type: "text", nullable: false),
+                    Method = table.Column<string>(type: "text", nullable: false),
+                    Message = table.Column<string>(type: "text", nullable: false),
+                    Type = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PermissionGroups",
                 columns: table => new
                 {
@@ -365,8 +384,7 @@ namespace RentalHome.DataAccess.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     PropertyId = table.Column<int>(type: "integer", nullable: false),
                     Url = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    IsMain = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    Order = table.Column<int>(type: "integer", nullable: false)
+                    IsMain = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -451,7 +469,7 @@ namespace RentalHome.DataAccess.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedAt", "Email", "Fullname", "IsActive", "IsVerified", "PasswordHash", "PasswordSalt", "PhoneNumber", "RefreshToken", "TokenExpiryTime", "UpdatedAt", "UserName" },
-                values: new object[] { 1, new DateTime(2025, 7, 16, 20, 40, 12, 922, DateTimeKind.Utc).AddTicks(5142), "superadmin@example.com", "Adminjon", true, true, "D42P7vktaO2foK9yXdm141IJE8Z8z3auswXfDhyzKCM=", "9f7d6dc5-34b4-4b66-a65e-0dc2fc17c0db", "+998934548544", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LixavCoder" });
+                values: new object[] { 1, new DateTime(2025, 8, 15, 13, 57, 9, 814, DateTimeKind.Utc).AddTicks(1543), "superadmin@example.com", "Adminjon", true, true, "D42P7vktaO2foK9yXdm141IJE8Z8z3auswXfDhyzKCM=", "9f7d6dc5-34b4-4b66-a65e-0dc2fc17c0db", "+998934548544", null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "LixavCoder" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_LandlordId",
@@ -593,6 +611,9 @@ namespace RentalHome.DataAccess.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Logs");
+
             migrationBuilder.DropTable(
                 name: "Notifications");
 
