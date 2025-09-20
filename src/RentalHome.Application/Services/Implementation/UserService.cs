@@ -4,6 +4,7 @@ using RentalHome.Application.Helpers.PasswordHashers;
 using RentalHome.Application.Models;
 using RentalHome.Application.Models.Landlord;
 using RentalHome.Application.Models.Tenant;
+using RentalHome.Application.Models.Token;
 using RentalHome.Application.Models.User;
 using RentalHome.Core.Entities;
 using RentalHome.DataAccess.Persistence;
@@ -13,7 +14,7 @@ namespace RentalHome.Application.Services;
 public class UserService(
     DatabaseContext context, 
     IPasswordHasher passwordHasher, 
-    IJwtTokenHandler jwtTokenHandler,
+    IJwtTokenHandler jwtTokenHandler, 
     IAuthService authService,
     IOtpService otpService,
     IEmailService emailService,
@@ -29,8 +30,9 @@ public class UserService(
             return ApiResult<string>.Failure(new[] { "Foydalanuvchi topilmadi." });
 
         var otp = await otpService.GetLatestOtpAsync(user.Id, model.Code);
-        if (otp is null || otp.ExpiredAt < DateTime.Now)
-            return ApiResult<string>.Failure(new[] { "Kod notogri yoki muddati tugagan." });
+
+        if (otp is null || otp.ExpiredAt > DateTime.Now)
+            return ApiResult<string>.Failure(["Kod notogri yoki muddati tugagan."]);
 
         user.IsVerified = true;
         await context.SaveChangesAsync();
@@ -172,6 +174,10 @@ public class UserService(
         var accessToken = jwtTokenHandler.GenerateAccessToken(user, Guid.NewGuid().ToString());
         var refreshToken = jwtTokenHandler.GenerateRefreshToken();
 
+        user.RefreshToken = refreshToken;
+        user.TokenExpiryTime = DateTime.UtcNow.AddDays(7); // yoki siz belgilagan muddat
+        await context.SaveChangesAsync();
+
 
         return ApiResult<LoginResponseModel>.Success(new LoginResponseModel
         {
@@ -204,6 +210,66 @@ public class UserService(
         };
 
         return ApiResult<UserAuthResponseModel>.Success(userPermissions);
+    }
+
+    public async Task<ApiResult<LoginResponseModel>> RefreshTokenAsync(RefreshTokenRequestModel model)
+    {
+        var principal = jwtTokenHandler.GetPrincipalFromExpiredToken(model.AccessToken);
+        if (principal == null)
+            return ApiResult<LoginResponseModel>.Failure(new[] { "Yaroqsiz access token" });
+
+        var email = principal.Identity?.Name;
+
+        var user = await context.Users
+            .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+            .ThenInclude(r => r.RolePermissions)
+            .ThenInclude(rp => rp.Permission)
+            .FirstOrDefaultAsync(u => u.Email == email);
+
+        if (user == null || user.RefreshToken != model.RefreshToken || user.TokenExpiryTime < DateTime.UtcNow)
+        {
+            return ApiResult<LoginResponseModel>.Failure(new[] { "Yaroqsiz yoki muddati tugagan refresh token" });
+        }
+
+        var newAccessToken = jwtTokenHandler.GenerateAccessToken(user, Guid.NewGuid().ToString());
+        var newRefreshToken = jwtTokenHandler.GenerateRefreshToken();
+
+        user.RefreshToken = newRefreshToken;
+        user.TokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+        await context.SaveChangesAsync();
+
+        return ApiResult<LoginResponseModel>.Success(new LoginResponseModel
+        {
+            Email = user.Email,
+            AccessToken = newAccessToken,
+            RefreshToken = newRefreshToken,
+            Roles = user.UserRoles.Select(ur => ur.Role.Name).ToList(),
+            Permissions = user.UserRoles
+                .SelectMany(ur => ur.Role.RolePermissions)
+                .Select(p => p.Permission.ShortName)
+                .Distinct()
+                .ToList()
+        });
+    }
+
+    public async Task<ApiResult<string>> LogoutAsync(int userId)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+        if (user is null)
+            return ApiResult<string>.Failure(new List<string>()
+            {
+                "User not found"
+            });
+
+        user.RefreshToken = null;
+        user.TokenExpiryTime = null;
+
+        await context.SaveChangesAsync();
+
+        return ApiResult<string>.Success("Logged out");
     }
 }
 

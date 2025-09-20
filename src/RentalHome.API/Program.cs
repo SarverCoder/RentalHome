@@ -5,6 +5,7 @@ using RentalHome.Application;
 using RentalHome.Application.Services;
 using RentalHome.DataAccess;
 using RentalHome.DataAccess.Persistence;
+using RentalHome.Infrastructure.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +49,7 @@ await context.Database.MigrateAsync();
 
 using (var scope = app.Services.CreateScope())
 {
+    await AutomatedMigration.MigrateAsync(scope.ServiceProvider);
     var dataSeedService = scope.ServiceProvider.GetRequiredService<IDataSeedService>();
     await dataSeedService.SeedRolesAndPermissionsAsync();
 }

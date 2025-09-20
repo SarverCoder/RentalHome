@@ -23,17 +23,33 @@ public class BookingController(IBookingService service) : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult>Create([FromBody] CreateBookingModel bookingModel)
+    public async Task<IActionResult> Create([FromBody] CreateBookingModel bookingModel)
     {
-        await service.AddAsync(bookingModel);
-        return Ok();
+        var res = await service.AddAsync(bookingModel);
+        return Ok(res);
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> Delete([FromBody] int id)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdatedBooking(int id, [FromBody] UpdateBookingModel model)
+    {
+        var result = await service.UpdateAsync(id, model);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result);
+        }
+
+        return Ok(result);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
     {
         var result = await service.DeleteAsync(id);
+
+        if (!result.Succeeded)
+            return BadRequest(result);
         
-        return Ok(result ? "deleted" : "not deleted");
+        return Ok(result);
     }
 }

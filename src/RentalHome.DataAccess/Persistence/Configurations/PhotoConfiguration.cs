@@ -10,7 +10,6 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
     {
         builder.HasKey(p => p.Id);
         builder.Property(p => p.Url).IsRequired().HasMaxLength(500);
-        builder.Property(p => p.IsMain).HasDefaultValue(false);
 
         builder.HasOne(p => p.Property)
             .WithMany(p => p.Photos)

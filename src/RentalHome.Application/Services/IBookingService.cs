@@ -1,13 +1,13 @@
+using RentalHome.Application.Models;
 using RentalHome.Application.Models.Booking;
-using RentalHome.Core.Entities;
 
 namespace RentalHome.Application.Services;
 
 public interface IBookingService
 {
-    Task AddAsync(CreateBookingModel createBookingModel);
-    Task<bool> UpdateAsync(UpdateBookingModel updateBookingModel);
-    Task<bool> DeleteAsync(int id);
+    Task<ApiResult<string>> AddAsync(CreateBookingModel createBookingModel);
+    Task<ApiResult<string>> UpdateAsync(int id,UpdateBookingModel updateBookingModel);
+    Task<ApiResult<string>> DeleteAsync(int id);
     Task<BookingModel> GetByIdAsync(int id);
     Task<List<BookingModel>> GetAllAsync();    
 }

@@ -18,7 +18,7 @@ public class Booking : BaseEntity
     public Property Property { get; set; }
     public Tenant Tenant { get; set; }
     public Landlord Landlord { get; set; }
-    public Review Review { get; set; }
+    public Review? Review { get; set; }
 
 }
 

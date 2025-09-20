@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RentalHome.API.Attributes;
+using RentalHome.Application.Helpers.GenerateJwt;
 using RentalHome.Application.Models;
+using RentalHome.Application.Models.Token;
 using RentalHome.Application.Models.User;
 using RentalHome.Application.Services;
 
@@ -10,7 +12,7 @@ namespace RentalHome.API.Controllers;
 [ApiController]
 public class AuthenticationController(IUserService userService) : ControllerBase
 {
-    [HttpPost("RegisterLandlord")]
+    [HttpPost("register-landlord")]
     public async Task<IActionResult> RegisterLandlord(RegisterLandlordModel model)
     {
         var result = await userService.RegisterLandlordAsync(model);
@@ -21,7 +23,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("RegisterTenant")]
+    [HttpPost("register-tenant")]
     public async Task<IActionResult> RegisterTenant(RegisterTenantModel model)
     {
         var result = await userService.RegisterTenantAsync(model);
@@ -33,7 +35,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
     }
 
 
-    [HttpPost("Login")]
+    [HttpPost("login")]
     public async Task<IActionResult> LoginUser(LoginUserModel model)
     {
         var result = await userService.LoginAsync(model);
@@ -52,7 +54,7 @@ public class AuthenticationController(IUserService userService) : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("Get-User-Auth")]
+    [HttpGet("get-user-auth")]
     public async Task<IActionResult> GetUserAuth()
     {
         var result = await userService.GetUserAuth();
@@ -62,5 +64,33 @@ public class AuthenticationController(IUserService userService) : ControllerBase
         }
         return BadRequest(result);
     }
+
+    [Authorize]
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestModel model)
+    {
+        var result = await userService.RefreshTokenAsync(model);
+        if (!result.Succeeded)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var userId = User.FindFirst(CustomClaimNames.Id)?.Value;
+        if (userId is null) return Unauthorized();
+
+        var result = await userService.LogoutAsync(int.Parse(userId));
+        if (!result.Succeeded)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
+
+
 
 }

@@ -10,7 +10,9 @@ public class BookingProfile : Profile
     {
         CreateMap<CreateBookingModel, Booking>();
         CreateMap<UpdateBookingModel, Booking>();
-        CreateMap<BookingModel, Booking>().ReverseMap(); 
-        
+        CreateMap<Booking, BookingModel>()
+            .ForMember(dest => dest.BookingStatus,
+                opt => opt.MapFrom(src => src.BookingStatus.ToString()));
+
     }
 }

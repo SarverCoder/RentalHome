@@ -56,7 +56,7 @@ public class PermissionService : IPermissionService
     public async Task<ApiResult<List<PermissionGroupListModel>>> GetPermissionsFromDbAsync()
     {
         // 1. Permissionlarni bazaga sinxronlash (qo'shish/yangilash)
-        await _dbContext.ResolvePermissions();
+        
 
         // 2. Bazadan barcha permissionlarni guruhlari bilan birga yuklash
         var permissions = await _dbContext.Permissions

@@ -91,7 +91,7 @@ public class DatabaseContext : DbContext
                 PasswordHash = Encrypt(seedPassword,seedSalt),
                 PasswordSalt = seedSalt,
                 TokenExpiryTime = DateTime.MinValue,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.MinValue,
                 UpdatedAt = DateTime.MinValue,
                 IsActive = true,
                 IsVerified = true

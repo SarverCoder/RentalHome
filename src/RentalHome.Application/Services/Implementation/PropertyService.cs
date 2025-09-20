@@ -10,27 +10,39 @@ public class PropertyService : IPropertyService
 {
     private readonly DatabaseContext _context;
     private readonly IMapper _mapper;
-    private readonly IPhotoService _photoService;
+    private readonly IImageService _imageService;
 
-    public PropertyService(DatabaseContext context, IMapper mapper, IPhotoService photoService)
+    public PropertyService(DatabaseContext context, IMapper mapper, IPhotoService photoService, IImageService imageService)
     {
         _context = context;
         _mapper = mapper;
-        _photoService = photoService;
+        _imageService = imageService;
     }
 
     public async Task<PropertyResponseModel> CreateAsync(CreatePropertyModel model)
     {
-        try
-        {
-            #region
+   
             var property = _mapper.Map<Property>(model);
+
+
             List<PropertyAmenity> results = model.PropertyAmenityIds.Select(a => new PropertyAmenity { AmenityId = a }).ToList();
             property.PropertyAmenities = results;
+
+            // Images upload
+            if (model.Images != null && model.Images.Any())
+            {
+                foreach (var imageDto in model.Images)
+                {
+                    var uploadedImage = await _imageService.UploadImageAsync(imageDto);
+                    property.Photos.Add(uploadedImage);
+                }
+            }
+
+
             await _context.Properties.AddAsync(property);
             await _context.SaveChangesAsync();
 
-            await _photoService.TransferTempImagesToMinio(property.Id,model.FileNames);
+           
 
             return new PropertyResponseModel
             {
@@ -38,46 +50,7 @@ public class PropertyService : IPropertyService
                 Message = "Property created successfully",
                 Id = property.Id
             };
-            #endregion
-            //var property = _mapper.Map<Property>(model);
-
-            //// Property ni avval saqlab, Id olish kerak
-            //await _context.Properties.AddAsync(property);
-            //await _context.SaveChangesAsync(); // bu yerda property.Id hosil bo'ladi
-
-            //// Amenity IDlar asosida PropertyAmenity yozuvlarini yaratish
-            //if (model.PropertyAmenityIds != null && model.PropertyAmenityIds.Any())
-            //{
-            //    var existingAmenityIds = await _context.Amenities
-            //        .Where(a => model.PropertyAmenityIds.Contains(a.Id))
-            //        .Select(a => a.Id)
-            //        .ToListAsync();
-
-            //    var propertyAmenities = existingAmenityIds.Select(amenityId => new PropertyAmenity
-            //    {
-            //        PropertyId = property.Id,
-            //        AmenityId = amenityId
-            //    }).ToList();
-
-            //    await _context.PropertyAmenities.AddRangeAsync(propertyAmenities);
-            //    await _context.SaveChangesAsync();
-            //}
-
-            //return new PropertyResponseModel
-            //{
-            //    IsSuccess = true,
-            //    Message = "Property created successfully",
-            //    Id = property.Id
-            //};
-        }
-        catch (Exception ex)
-        {
-            return new PropertyResponseModel
-            {
-                IsSuccess = false,
-                Message = $"Failed to create property: {ex.Message}"
-            };
-        }
+        
     }
 
 
