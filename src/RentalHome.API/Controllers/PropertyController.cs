@@ -9,16 +9,49 @@ namespace RentalHome.API.Controllers;
 public class PropertyController : ControllerBase
 {
     private readonly IPropertyService _propertyService;
-
-    public PropertyController(IPropertyService propertyService)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    public PropertyController(IPropertyService propertyService, IHttpContextAccessor httpContextAccessor)
     {
         _propertyService = propertyService;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    private string GetBaseUrl()
+    {
+        var request = _httpContextAccessor.HttpContext?.Request;
+        if (request == null)
+            return string.Empty;
+
+        return $"{request.Scheme}://{request.Host}";
+    }
+
+    private void SetImagesBaseUrl(PropertyModel property)
+    {
+        if (property?.PhotoUrls == null)
+            return;
+
+        var baseUrl = GetBaseUrl();
+
+        foreach (var image in property.PhotoUrls)
+        {
+            image.Url = $"{baseUrl}/images/{image.Image}";
+        }
+    }
+
+    private void SetImagesBaseUrl(IEnumerable<PropertyModel> property)
+    {
+        if (property == null)
+            return;
+
+        foreach (var product in property)
+            SetImagesBaseUrl(product);
     }
 
     [HttpGet("get-all")]
     public async Task<IActionResult> GetAll()
     {
         var properties = await _propertyService.GetAllAsync();
+        SetImagesBaseUrl(properties);
         return Ok(properties);
     }
 
@@ -28,17 +61,14 @@ public class PropertyController : ControllerBase
         var property = await _propertyService.GetByIdAsync(id);
         if (property == null)
             return NotFound(new { Message = "Property not found" });
-
+        SetImagesBaseUrl(property);
         return Ok(property);
     }
 
     [HttpPost("create")]
-    public async Task<IActionResult> Create([FromBody] CreatePropertyModel model)
+    public async Task<IActionResult> Create(CreatePropertyModel model)
     {
         var result = await _propertyService.CreateAsync(model);
-
-        
-
         return Ok(result);
     }
 

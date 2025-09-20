@@ -3,6 +3,7 @@ using RentalHome.API.Middlewares;
 using RentalHome.Application;
 using RentalHome.Application.Services;
 using RentalHome.DataAccess;
+using RentalHome.DataAccess.Persistence;
 using RentalHome.Infrastructure.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,6 +53,7 @@ var app = builder.Build();
 //Seed roles and permissions on application startup
 using (var scope = app.Services.CreateScope())
 {
+    await AutomatedMigration.MigrateAsync(scope.ServiceProvider);
     var dataSeedService = scope.ServiceProvider.GetRequiredService<IDataSeedService>();
     await dataSeedService.SeedRolesAndPermissionsAsync();
 }

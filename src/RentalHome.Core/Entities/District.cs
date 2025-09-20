@@ -8,6 +8,6 @@ public  class District : BaseEntity
     public int RegionId { get; set; }
     public Region Region { get; set; }
 
-    public ICollection<Property> Properties { get; set; }
+    public ICollection<Property> Properties { get; set; } = new List<Property>();
 
 }

@@ -12,8 +12,8 @@ using RentalHome.DataAccess.Persistence;
 namespace RentalHome.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250716204013_InitialMIgration")]
-    partial class InitialMIgration
+    [Migration("20250920115517_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -128,11 +128,6 @@ namespace RentalHome.DataAccess.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)");
 
-                    b.Property<bool>("IsVerified")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
@@ -142,6 +137,45 @@ namespace RentalHome.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Landlords");
+                });
+
+            modelBuilder.Entity("RentalHome.Core.Entities.Logging", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.Notification", b =>
@@ -241,9 +275,6 @@ namespace RentalHome.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
-
-                    b.Property<int>("Order")
-                        .HasColumnType("integer");
 
                     b.Property<int>("PropertyId")
                         .HasColumnType("integer");
@@ -510,7 +541,7 @@ namespace RentalHome.DataAccess.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("TokenExpiryTime")
+                    b.Property<DateTime?>("TokenExpiryTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -535,7 +566,7 @@ namespace RentalHome.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 7, 16, 20, 40, 12, 922, DateTimeKind.Utc).AddTicks(5142),
+                            CreatedAt = new DateTime(2025, 9, 20, 11, 55, 16, 662, DateTimeKind.Utc).AddTicks(8786),
                             Email = "superadmin@example.com",
                             Fullname = "Adminjon",
                             IsActive = true,
@@ -836,8 +867,7 @@ namespace RentalHome.DataAccess.Migrations
 
             modelBuilder.Entity("RentalHome.Core.Entities.Booking", b =>
                 {
-                    b.Navigation("Review")
-                        .IsRequired();
+                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.District", b =>
@@ -896,13 +926,11 @@ namespace RentalHome.DataAccess.Migrations
 
             modelBuilder.Entity("RentalHome.Core.Entities.User", b =>
                 {
-                    b.Navigation("Landlord")
-                        .IsRequired();
+                    b.Navigation("Landlord");
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("Tenant")
-                        .IsRequired();
+                    b.Navigation("Tenant");
 
                     b.Navigation("UserRoles");
                 });

@@ -6,39 +6,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RentalHome.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class LandlordEntityUpdated : Migration
+    public partial class UpdatedUserModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "IsVerified",
-                table: "Landlords");
-
             migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2025, 7, 30, 23, 17, 44, 948, DateTimeKind.Utc).AddTicks(3760));
+                value: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
-                name: "IsVerified",
-                table: "Landlords",
-                type: "boolean",
-                nullable: false,
-                defaultValue: false);
-
             migrationBuilder.UpdateData(
                 table: "Users",
                 keyColumn: "Id",
                 keyValue: 1,
                 column: "CreatedAt",
-                value: new DateTime(2025, 7, 16, 20, 40, 12, 922, DateTimeKind.Utc).AddTicks(5142));
+                value: new DateTime(2025, 9, 20, 12, 18, 6, 488, DateTimeKind.Utc).AddTicks(5353));
         }
     }
 }

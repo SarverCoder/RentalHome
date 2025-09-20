@@ -12,8 +12,8 @@ using RentalHome.DataAccess.Persistence;
 namespace RentalHome.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250730231745_LandlordEntityUpdated")]
-    partial class LandlordEntityUpdated
+    [Migration("20250920121806_FixedModel")]
+    partial class FixedModel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,6 @@ namespace RentalHome.DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("IconClass")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -271,10 +270,9 @@ namespace RentalHome.DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsMain")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<int>("PropertyId")
                         .HasColumnType("integer");
@@ -303,7 +301,6 @@ namespace RentalHome.DataAccess.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
@@ -329,7 +326,6 @@ namespace RentalHome.DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
@@ -541,7 +537,7 @@ namespace RentalHome.DataAccess.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("TokenExpiryTime")
+                    b.Property<DateTime?>("TokenExpiryTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -566,7 +562,7 @@ namespace RentalHome.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2025, 7, 30, 23, 17, 44, 948, DateTimeKind.Utc).AddTicks(3760),
+                            CreatedAt = new DateTime(2025, 9, 20, 12, 18, 6, 488, DateTimeKind.Utc).AddTicks(5353),
                             Email = "superadmin@example.com",
                             Fullname = "Adminjon",
                             IsActive = true,
@@ -867,8 +863,7 @@ namespace RentalHome.DataAccess.Migrations
 
             modelBuilder.Entity("RentalHome.Core.Entities.Booking", b =>
                 {
-                    b.Navigation("Review")
-                        .IsRequired();
+                    b.Navigation("Review");
                 });
 
             modelBuilder.Entity("RentalHome.Core.Entities.District", b =>
@@ -927,13 +922,11 @@ namespace RentalHome.DataAccess.Migrations
 
             modelBuilder.Entity("RentalHome.Core.Entities.User", b =>
                 {
-                    b.Navigation("Landlord")
-                        .IsRequired();
+                    b.Navigation("Landlord");
 
                     b.Navigation("Notifications");
 
-                    b.Navigation("Tenant")
-                        .IsRequired();
+                    b.Navigation("Tenant");
 
                     b.Navigation("UserRoles");
                 });

@@ -10,8 +10,7 @@ public class PropertyProfile : Profile
     {
         CreateMap<CreatePropertyModel, Property>();
         CreateMap<UpdatePropertyModel, Property>();
-        CreateMap<Property, PropertyModel>()
-           .ForMember(dest => dest.PhotoUrls, opt => opt.MapFrom(src => src.Photos.Select(p => p.Url).ToList()));
+      
 
 
         CreateMap<CreatePropertyModel, Property>().ReverseMap();
@@ -24,7 +23,7 @@ public class PropertyProfile : Profile
     .ForMember(dest => dest.LandlordName,
         opt => opt.MapFrom(src => src.Landlord.User.UserName))
     .ForMember(dest => dest.PhotoUrls,
-        opt => opt.MapFrom(src => src.Photos.Select(p => p.Url)))
+        opt => opt.MapFrom(src => src.Photos))
     .ForMember(dest => dest.Amenities,
         opt => opt.MapFrom(src => src.PropertyAmenities.Select(pa => pa.Amenity)));
     }
